@@ -1,5 +1,5 @@
 import { type GetActivitiesParams, useActivitiesContext } from '@/context/ActivitiesContext.tsx';
-import { defaultActivitiesFilters } from '@/context/types.ts';
+import { defaultActivitiesFilters } from '@/api/types/activities.ts';
 
 export const useActivitiesFilters = () => {
     const { filters, updateFilter, clearFilters } = useActivitiesContext();

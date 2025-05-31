@@ -6,7 +6,6 @@ import {
     Button,
     Dialog,
     DialogContent,
-    DialogTitle,
     FormControl,
     FormHelperText,
     IconButton,
@@ -25,7 +24,7 @@ import {
     FitnessCenter,
     Schedule
 } from '@mui/icons-material';
-import { type Activity, type ActivityType, ActivityTypes } from '@/context/types.ts';
+import { type Activity, type ActivityType, ActivityTypes } from '@/api/types/activities.ts';
 
 // Import activity images
 import runImage from '@/assets/activities/run.png';
@@ -36,6 +35,7 @@ import swimImage from '@/assets/activities/swim.jpeg';
 import workoutImage from '@/assets/activities/workout.png';
 import hiitImage from '@/assets/activities/hiit.jpeg';
 import otherImage from '@/assets/activities/other.png';
+import { ModalHeader } from '@/components/common/ModalHeader.tsx';
 
 const activityImages: Record<ActivityType, string> = {
     [ActivityTypes.RUN]: runImage,
@@ -199,57 +199,35 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                     value={progress}
                     sx={{
                         height: 4,
-                        background: 'rgba(0, 255, 136, 0.1)',
+                        background: 'rgba(10, 120, 171, 0.1)',
                         '& .MuiLinearProgress-bar': {
-                            background: 'linear-gradient(90deg, #00FF88 0%, #A020F0 100%)'
+                            background: 'linear-gradient(90deg, #0A78AB 0%, #A020F0 100%)'
                         }
                     }}
                 />
             )}
 
-            <DialogTitle
-                sx={{
-                    position: 'relative',
-                    p: 4,
-                    pb: 2,
-                    background:
-                        'linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(160, 32, 240, 0.05) 100%)'
-                }}>
-                <Box
-                    sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                        <Box
+            <ModalHeader
+                icon={<FitnessCenter sx={{ color: 'white', fontSize: 28 }} />}
+                title={
+                    <Box>
+                        <Typography
+                            variant="h5"
                             sx={{
-                                width: 56,
-                                height: 56,
-                                borderRadius: '16px',
-                                background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                boxShadow: '0 8px 24px rgba(0, 255, 136, 0.3)'
+                                fontWeight: 800,
+                                background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
                             }}>
-                            <FitnessCenter sx={{ color: 'white', fontSize: 28 }} />
-                        </Box>
-                        <Box>
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    fontWeight: 800,
-                                    background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
-                                    backgroundClip: 'text',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent'
-                                }}>
-                                Add New Activity
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{ color: 'rgba(0, 0, 0, 0.6)', mt: 0.5 }}>
-                                {activity ? 'Edit' : 'Create'} a new workout session
-                            </Typography>
-                        </Box>
+                            Add New Activity
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'rgba(0, 0, 0, 0.6)', mt: 0.5 }}>
+                            {activity ? 'Edit' : 'Create'} a new workout session
+                        </Typography>
                     </Box>
+                }
+                closeIcon={
                     <IconButton
                         onClick={handleClose}
                         disabled={isSubmitting}
@@ -263,8 +241,8 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                         }}>
                         <Close />
                     </IconButton>
-                </Box>
-            </DialogTitle>
+                }
+            />
 
             <DialogContent sx={{ p: 4 }}>
                 <form onSubmit={handleSubmit(onFormSubmit)}>
@@ -299,10 +277,10 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                             borderRadius: '16px',
                                             background: 'rgba(255, 255, 255, 0.8)',
                                             '&:hover fieldset': {
-                                                borderColor: '#00FF88'
+                                                borderColor: '#0A78AB'
                                             },
                                             '&.Mui-focused fieldset': {
-                                                borderColor: '#00FF88',
+                                                borderColor: '#0A78AB',
                                                 borderWidth: 2
                                             }
                                         }
@@ -324,10 +302,10 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                             borderRadius: '16px',
                                             background: 'rgba(255, 255, 255, 0.8)',
                                             '&:hover fieldset': {
-                                                borderColor: '#00FF88'
+                                                borderColor: '#0A78AB'
                                             },
                                             '&.Mui-focused fieldset': {
-                                                borderColor: '#00FF88',
+                                                borderColor: '#0A78AB',
                                                 borderWidth: 2
                                             }
                                         }
@@ -393,10 +371,10 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                                 borderRadius: '16px',
                                                 background: 'rgba(255, 255, 255, 0.8)',
                                                 '&:hover fieldset': {
-                                                    borderColor: '#00FF88'
+                                                    borderColor: '#0A78AB'
                                                 },
                                                 '&.Mui-focused fieldset': {
-                                                    borderColor: '#00FF88',
+                                                    borderColor: '#0A78AB',
                                                     borderWidth: 2
                                                 }
                                             }
@@ -429,10 +407,10 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                                 borderRadius: '16px',
                                                 background: 'rgba(255, 255, 255, 0.8)',
                                                 '&:hover fieldset': {
-                                                    borderColor: '#00FF88'
+                                                    borderColor: '#0A78AB'
                                                 },
                                                 '&.Mui-focused fieldset': {
-                                                    borderColor: '#00FF88',
+                                                    borderColor: '#0A78AB',
                                                     borderWidth: 2
                                                 }
                                             }
@@ -469,10 +447,10 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                             borderRadius: '16px',
                                             background: 'rgba(255, 255, 255, 0.8)',
                                             '&:hover fieldset': {
-                                                borderColor: '#00FF88'
+                                                borderColor: '#0A78AB'
                                             },
                                             '&.Mui-focused fieldset': {
-                                                borderColor: '#00FF88',
+                                                borderColor: '#0A78AB',
                                                 borderWidth: 2
                                             }
                                         }
@@ -509,10 +487,10 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                             borderRadius: '16px',
                                             background: 'rgba(255, 255, 255, 0.8)',
                                             '&:hover fieldset': {
-                                                borderColor: '#00FF88'
+                                                borderColor: '#0A78AB'
                                             },
                                             '&.Mui-focused fieldset': {
-                                                borderColor: '#00FF88',
+                                                borderColor: '#0A78AB',
                                                 borderWidth: 2
                                             }
                                         }
@@ -551,12 +529,12 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                     py: 1.5,
                                     fontWeight: 800,
                                     fontSize: '1rem',
-                                    background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
-                                    boxShadow: '0 8px 24px rgba(0, 255, 136, 0.3)',
+                                    background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
+                                    boxShadow: '0 8px 24px rgba(10, 120, 171, 0.3)',
                                     '&:hover': {
                                         background:
-                                            'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
-                                        boxShadow: '0 12px 32px rgba(0, 255, 136, 0.4)',
+                                            'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
+                                        boxShadow: '0 12px 32px rgba(10, 120, 171, 0.4)',
                                         transform: 'translateY(-2px)'
                                     },
                                     '&:disabled': {

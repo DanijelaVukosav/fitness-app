@@ -4,7 +4,7 @@ import { useCreateActivity, useDeleteActivity, useUpdateActivity } from '@/hooks
 import type { CreateActivityParams, UpdateActivityParams } from '@/context/ActivitiesContext';
 import { useActivitiesContext } from '@/context/ActivitiesContext';
 import { useActivitiesUI } from '@/hooks/useActivitiesUI';
-import type { Activity } from '@/context/types.ts';
+import type { Activity } from '@/api/types/activities.ts';
 
 export interface UseActivitiesManagerReturn {
     selectedEditActivity: Activity | null;

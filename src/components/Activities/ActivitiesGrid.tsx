@@ -1,6 +1,6 @@
 // components/ActivitiesGrid.tsx (Updated)
 import { useCallback, useMemo, useState } from 'react';
-import { Box, Fade, Pagination, Paper, Skeleton, Typography } from '@mui/material';
+import { Box, Fade, Pagination, Paper, Skeleton } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { ActivityCard } from '@/components/Activities/ActivityCard.tsx';
 import { AddActivityCard } from '@/components/Activities/AddActivityCard.tsx';
@@ -8,8 +8,9 @@ import { useActivities } from '@/hooks/useActivities.ts';
 import { useActivitiesContext } from '@/context/ActivitiesContext.tsx';
 import { useNavigate } from 'react-router-dom';
 import { APPLICATION_ROUTES } from '@/router/types.ts';
-import type { Activity } from '@/context/types.ts';
+import type { Activity } from '@/api/types/activities.ts';
 import { useActivitiesManager } from '@/hooks/useActivitiesManager.ts';
+import { ActivitiesGridHeader } from '@/components/Activities/ActivitiesGridHeader.tsx';
 
 interface ActivitiesGridProps {
     itemsPerPage?: number;
@@ -124,17 +125,17 @@ export const ActivitiesGrid: React.FC<ActivitiesGridProps> = ({
     //                     height: 120,
     //                     borderRadius: '50%',
     //                     background:
-    //                         'linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(160, 32, 240, 0.1) 100%)',
+    //                         'linear-gradient(135deg, rgba(10, 120, 171, 0.1) 0%, rgba(160, 32, 240, 0.1) 100%)',
     //                     display: 'flex',
     //                     alignItems: 'center',
     //                     justifyContent: 'center',
     //                     mb: 3,
-    //                     border: '2px solid rgba(0, 255, 136, 0.2)'
+    //                     border: '2px solid rgba(10, 120, 171, 0.2)'
     //                 }}>
     //                 <Typography
     //                     variant="h3"
     //                     sx={{
-    //                         background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
+    //                         background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
     //                         backgroundClip: 'text',
     //                         WebkitBackgroundClip: 'text',
     //                         WebkitTextFillColor: 'transparent',
@@ -176,26 +177,11 @@ export const ActivitiesGrid: React.FC<ActivitiesGridProps> = ({
 
     return (
         <Box>
-            <Fade in timeout={800}>
-                <Box sx={{ mb: 4 }}>
-                    <Typography
-                        variant="h6"
-                        sx={{
-                            fontWeight: 600,
-                            color: 'rgba(0, 0, 0, 0.8)',
-                            mb: 1
-                        }}>
-                        {data?.activities?.length} Activities Found
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            color: 'rgba(0, 0, 0, 0.6)'
-                        }}>
-                        Page {currentPage} of {totalPages}
-                    </Typography>
-                </Box>
-            </Fade>
+            <ActivitiesGridHeader
+                showAddCard={true}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+            />
 
             <Fade in timeout={1000}>
                 <Grid container spacing={3} sx={{ mb: 6 }}>
@@ -262,18 +248,18 @@ export const ActivitiesGrid: React.FC<ActivitiesGridProps> = ({
                                         transition: 'all 0.3s ease',
                                         '&:hover': {
                                             background:
-                                                'linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(160, 32, 240, 0.1) 100%)',
+                                                'linear-gradient(135deg, rgba(10, 120, 171, 0.1) 0%, rgba(160, 32, 240, 0.1) 100%)',
                                             transform: 'translateY(-2px)'
                                         },
                                         '&.Mui-selected': {
                                             background:
-                                                'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
+                                                'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
                                             color: 'white',
-                                            boxShadow: '0 4px 15px rgba(0, 255, 136, 0.3)',
+                                            boxShadow: '0 4px 15px rgba(10, 120, 171, 0.3)',
                                             '&:hover': {
                                                 background:
-                                                    'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
-                                                boxShadow: '0 6px 20px rgba(0, 255, 136, 0.4)'
+                                                    'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
+                                                boxShadow: '0 6px 20px rgba(10, 120, 171, 0.4)'
                                             }
                                         }
                                     }

@@ -1,11 +1,12 @@
 // mocks/handlers.ts
 import { http, HttpResponse } from 'msw';
-import { type Activity, type ActivityType, ActivityTypes } from '@/context/types';
+import { type Activity, type ActivityType, ActivityTypes } from '@/api/types/activities.ts';
 import type {
     CreateActivityParams,
     GetActivitiesParams,
     GetActivitiesResponse
 } from '@/context/ActivitiesContext';
+import type { CreateGoalParams, Goal, UpdateGoalParams } from '@/api/types/goal.ts';
 
 // User Settings Types
 export interface UserSettings {
@@ -29,7 +30,7 @@ export interface CreateUserSettingsParams {
     reminderTime?: string;
 }
 
-export interface UpdateUserSettingsParams extends Partial<CreateUserSettingsParams> {}
+export type UpdateUserSettingsParams = Partial<CreateUserSettingsParams>;
 
 export interface GoalProgress {
     date: string;
@@ -83,16 +84,12 @@ let activities: Activity[] = [
 ];
 
 // Default user settings
-let userSettings: UserSettings = {
-    id: 'user-1',
-    goalType: 'count',
-    goalValue: 3,
-    goalFrequency: 'daily',
-    weeklyTarget: 21,
-    notifications: true,
-    reminderTime: '09:00',
-    createdAt: new Date('2024-01-01T00:00:00Z'),
-    updatedAt: new Date('2024-01-01T00:00:00Z')
+let userGoal: Goal = {
+    userId: 'user_1',
+    type: 'count',
+    target: 3,
+    frequency: 'daily',
+    weeklyTarget: 21
 };
 
 // Utility functions
@@ -143,83 +140,6 @@ const paginateResults = (items: Activity[], page = 1, limit = 10) => {
         page,
         limit,
         totalPages: Math.ceil(items.length / limit)
-    };
-};
-
-// Goal tracking utilities
-const getDateString = (date: Date): string => {
-    return date.toISOString().split('T')[0];
-};
-
-const getWeekStart = (date: Date): Date => {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day;
-    return new Date(d.setDate(diff));
-};
-
-const getWeekEnd = (date: Date): Date => {
-    const weekStart = getWeekStart(date);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-    return weekEnd;
-};
-
-const calculateDailyProgress = (date: Date, settings: UserSettings): GoalProgress => {
-    const dateStr = getDateString(date);
-    const dayActivities = activities.filter(
-        (activity) => getDateString(new Date(activity.date)) === dateStr
-    );
-
-    const activityCount = dayActivities.length;
-    const totalDuration = dayActivities.reduce((sum, activity) => sum + activity.duration, 0);
-
-    const targetValue =
-        settings.goalFrequency === 'daily' ? settings.goalValue : settings.weeklyTarget;
-    const currentValue = settings.goalType === 'count' ? activityCount : totalDuration;
-
-    return {
-        date: dateStr,
-        achieved: currentValue >= targetValue,
-        activityCount,
-        totalDuration,
-        targetValue,
-        targetType: settings.goalType
-    };
-};
-
-const calculateWeeklyProgress = (weekStart: Date, settings: UserSettings): WeeklyProgress => {
-    const weekEnd = getWeekEnd(weekStart);
-    const dailyProgress: GoalProgress[] = [];
-
-    let totalCount = 0;
-    let totalDuration = 0;
-
-    // Calculate daily progress for the week
-    for (let i = 0; i < 7; i++) {
-        const currentDate = new Date(weekStart);
-        currentDate.setDate(weekStart.getDate() + i);
-
-        const dayProgress = calculateDailyProgress(currentDate, settings);
-        dailyProgress.push(dayProgress);
-
-        totalCount += dayProgress.activityCount;
-        totalDuration += dayProgress.totalDuration;
-    }
-
-    const targetValue =
-        settings.goalType === 'count' ? settings.weeklyTarget : settings.weeklyTarget;
-    const currentValue = settings.goalType === 'count' ? totalCount : totalDuration;
-
-    return {
-        weekStart: getDateString(weekStart),
-        weekEnd: getDateString(weekEnd),
-        achieved: currentValue >= targetValue,
-        totalCount,
-        totalDuration,
-        targetValue,
-        targetType: settings.goalType,
-        dailyProgress
     };
 };
 
@@ -432,7 +352,6 @@ export const handlers = [
         console.log('stats', request);
 
         const url = new URL(request.url);
-        console.log('url', url);
         const params: GetActivitiesParams = {
             type: (url.searchParams.get('type') as ActivityType) || undefined,
             startDate: url.searchParams.get('startDate')
@@ -445,7 +364,6 @@ export const handlers = [
 
         // Apply filters for stats
         const filtered = filterActivities(activities, params);
-        console.log('filterd', filtered);
 
         // Calculate statistics
         const totalActivities = filtered.length;
@@ -464,7 +382,9 @@ export const handlers = [
         // Activities by date (YYYY-MM-DD format)
         const activitiesByDate = filtered.reduce(
             (acc, activity) => {
-                const dateKey = activity.date.toISOString().split('T')[0];
+                const dateKey = (
+                    typeof activity.date === 'string' ? activity.date : activity.date.toISOString()
+                ).split('T')[0];
                 acc[dateKey] = (acc[dateKey] || 0) + 1;
                 return acc;
             },
@@ -483,20 +403,20 @@ export const handlers = [
     // ============== USER SETTINGS ENDPOINTS ==============
 
     // GET /api/user-settings - Get user settings
-    http.get('/mock/user-settings', async () => {
+    http.get('/mock/goals/:userId', async () => {
         await delay(300);
 
-        return HttpResponse.json(userSettings);
+        return HttpResponse.json(userGoal);
     }),
 
     // POST /api/user-settings - Create/Update user settings
     http.post('/mock/user-settings', async ({ request }) => {
         await delay(400);
 
-        const body = (await request.json()) as CreateUserSettingsParams;
+        const body = (await request.json()) as CreateGoalParams;
 
         // Validate required fields
-        if (!body.goalType || !body.goalValue || !body.goalFrequency) {
+        if (!body.type || !body.target || !body.frequency) {
             return new HttpResponse(
                 JSON.stringify({
                     message: 'Goal type, value, and frequency are required',
@@ -507,7 +427,7 @@ export const handlers = [
         }
 
         // Validate goal values
-        if (body.goalValue <= 0) {
+        if (body.target <= 0) {
             return new HttpResponse(
                 JSON.stringify({
                     message: 'Goal value must be greater than 0',
@@ -518,28 +438,25 @@ export const handlers = [
         }
 
         // Update user settings
-        userSettings = {
-            ...userSettings,
-            goalType: body.goalType,
-            goalValue: body.goalValue,
-            goalFrequency: body.goalFrequency,
-            weeklyTarget: body.weeklyTarget ?? userSettings.weeklyTarget,
-            notifications: body.notifications ?? userSettings.notifications,
-            reminderTime: body.reminderTime ?? userSettings.reminderTime,
-            updatedAt: new Date()
+        userGoal = {
+            ...userGoal,
+            type: body.type,
+            target: body.target,
+            frequency: body.frequency,
+            weeklyTarget: body.weeklyTarget ?? userGoal.weeklyTarget
         };
 
-        return HttpResponse.json(userSettings);
+        return HttpResponse.json(userGoal);
     }),
 
     // PATCH /api/user-settings - Partially update user settings
-    http.patch('/mock/user-settings', async ({ request }) => {
+    http.patch('/mock/goals/:userId', async ({ request }) => {
         await delay(300);
 
-        const body = (await request.json()) as UpdateUserSettingsParams;
+        const body = (await request.json()) as UpdateGoalParams;
 
         // Validate goal value if provided
-        if (body.goalValue !== undefined && body.goalValue <= 0) {
+        if (body.target !== undefined && body.target <= 0) {
             return new HttpResponse(
                 JSON.stringify({
                     message: 'Goal value must be greater than 0',
@@ -550,106 +467,12 @@ export const handlers = [
         }
 
         // Update user settings with only provided fields
-        userSettings = {
-            ...userSettings,
-            ...body,
-            updatedAt: new Date()
+        userGoal = {
+            ...userGoal,
+            ...body
         };
 
-        return HttpResponse.json(userSettings);
-    }),
-
-    // ============== GOAL TRACKING ENDPOINTS ==============
-
-    // GET /api/goal-progress/daily - Get daily goal progress
-    http.get('/mock/goal-progress/daily', async ({ request }) => {
-        await delay(400);
-
-        const url = new URL(request.url);
-        const dateParam = url.searchParams.get('date');
-        const date = dateParam ? new Date(dateParam) : new Date();
-
-        const progress = calculateDailyProgress(date, userSettings);
-
-        return HttpResponse.json(progress);
-    }),
-
-    // GET /api/goal-progress/weekly - Get weekly goal progress
-    http.get('/mock/goal-progress/weekly', async ({ request }) => {
-        await delay(500);
-
-        const url = new URL(request.url);
-        const dateParam = url.searchParams.get('date');
-        const date = dateParam ? new Date(dateParam) : new Date();
-        const weekStart = getWeekStart(date);
-
-        const progress = calculateWeeklyProgress(weekStart, userSettings);
-
-        return HttpResponse.json(progress);
-    }),
-
-    // GET /api/goal-progress/range - Get goal progress for date range
-    http.get('/mock/goal-progress/range', async ({ request }) => {
-        await delay(600);
-
-        const url = new URL(request.url);
-        const startDateParam = url.searchParams.get('startDate');
-        const endDateParam = url.searchParams.get('endDate');
-
-        if (!startDateParam || !endDateParam) {
-            return new HttpResponse(
-                JSON.stringify({
-                    message: 'Start date and end date are required',
-                    code: 'VALIDATION_ERROR'
-                }),
-                { status: 400, headers: { 'Content-Type': 'application/json' } }
-            );
-        }
-
-        const startDate = new Date(startDateParam);
-        const endDate = new Date(endDateParam);
-        const progressData: GoalProgress[] = [];
-
-        // Calculate progress for each day in range
-        const currentDate = new Date(startDate);
-        while (currentDate <= endDate) {
-            const dayProgress = calculateDailyProgress(currentDate, userSettings);
-            progressData.push(dayProgress);
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        // Calculate summary statistics
-        const totalDays = progressData.length;
-        const achievedDays = progressData.filter((p) => p.achieved).length;
-        const achievementRate = totalDays > 0 ? (achievedDays / totalDays) * 100 : 0;
-
-        return HttpResponse.json({
-            startDate: getDateString(startDate),
-            endDate: getDateString(endDate),
-            totalDays,
-            achievedDays,
-            achievementRate: Math.round(achievementRate * 100) / 100,
-            dailyProgress: progressData
-        });
-    }),
-
-    // DELETE /api/user-settings - Reset user settings to defaults
-    http.delete('/mock/user-settings', async () => {
-        await delay(300);
-
-        userSettings = {
-            id: 'user-1',
-            goalType: 'count',
-            goalValue: 3,
-            goalFrequency: 'daily',
-            weeklyTarget: 21,
-            notifications: true,
-            reminderTime: '09:00',
-            createdAt: new Date('2024-01-01T00:00:00Z'),
-            updatedAt: new Date()
-        };
-
-        return HttpResponse.json(userSettings);
+        return HttpResponse.json(userGoal);
     }),
 
     // Simulate server errors occasionally for testing

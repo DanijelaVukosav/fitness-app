@@ -19,27 +19,27 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                 cursor: 'pointer',
                 transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                 background:
-                    'linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(160, 32, 240, 0.05) 100%)',
-                border: '2px dashed rgba(0, 255, 136, 0.3)',
+                    'linear-gradient(135deg, rgba(10, 120, 171, 0.05) 0%, rgba(160, 32, 240, 0.05) 100%)',
+                border: '2px dashed rgba(10, 120, 171, 0.3)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 32px rgba(0, 255, 136, 0.1)',
+                boxShadow: '0 8px 32px rgba(10, 120, 171, 0.1)',
                 '&:hover': {
                     transform: 'translateY(-8px) scale(1.02)',
                     background:
-                        'linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(160, 32, 240, 0.1) 100%)',
-                    border: '2px dashed rgba(0, 255, 136, 0.6)',
-                    boxShadow: '0 20px 40px rgba(0, 255, 136, 0.2)',
+                        'linear-gradient(135deg, rgba(10, 120, 171, 0.1) 0%, rgba(160, 32, 240, 0.1) 100%)',
+                    border: '2px dashed rgba(10, 120, 171, 0.6)',
+                    boxShadow: '0 20px 40px rgba(10, 120, 171, 0.2)',
                     '& .add-icon': {
                         transform: 'scale(1.2) rotate(90deg)',
-                        background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
+                        background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent'
                     },
                     '& .add-text': {
-                        background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
+                        background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent'
                     },
@@ -60,7 +60,7 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                     height: '80%',
                     borderRadius: '50%',
                     background:
-                        'radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%)',
+                        'radial-gradient(circle, rgba(10, 120, 171, 0.1) 0%, transparent 70%)',
                     transform: 'translate(-50%, -50%)',
                     opacity: 0,
                     transition: 'all 0.4s ease',
@@ -79,9 +79,9 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                     className="add-icon"
                     sx={{
                         fontSize: 64,
-                        color: 'rgba(0, 255, 136, 0.7)',
+                        color: 'rgba(10, 120, 171, 0.7)',
                         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                        filter: 'drop-shadow(0 4px 8px rgba(0, 255, 136, 0.2))'
+                        filter: 'drop-shadow(0 4px 8px rgba(10, 120, 171, 0.2))'
                     }}
                 />
             </Box>
@@ -99,7 +99,7 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                     sx={{
                         fontWeight: 800,
                         fontSize: '1.3rem',
-                        color: 'rgba(0, 255, 136, 0.8)',
+                        color: 'rgba(10, 120, 171, 0.8)',
                         mb: 1,
                         transition: 'all 0.3s ease'
                     }}>
@@ -126,7 +126,7 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                         width: '4px',
                         height: '4px',
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
+                        background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
                         opacity: 0.3,
                         animation: `float${i} ${3 + i * 0.5}s ease-in-out infinite`,
                         top: `${20 + i * 10}%`,

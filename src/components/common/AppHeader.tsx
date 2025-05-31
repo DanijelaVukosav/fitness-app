@@ -22,6 +22,10 @@ export const AppHeader: React.FC = () => {
         navigate(APPLICATION_ROUTES.SETTINGS);
     }, [navigate]);
 
+    const onLogoClick = useCallback(() => {
+        navigate(APPLICATION_ROUTES.ACTIVITIES);
+    }, [navigate]);
+
     return (
         <AppBar
             position="fixed"
@@ -33,7 +37,7 @@ export const AppHeader: React.FC = () => {
                 zIndex: theme.zIndex.appBar
             }}>
             <Toolbar sx={{ justifyContent: 'space-between' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }} onClick={onLogoClick}>
                     {isMobile && (
                         <IconButton edge="start" sx={{ mr: 2 }}>
                             <MenuIcon />
@@ -42,7 +46,7 @@ export const AppHeader: React.FC = () => {
                     <FitnessCenter
                         sx={{
                             fontSize: 32,
-                            background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
+                            background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
                             backgroundClip: 'text',
                             WebkitBackgroundClip: 'text',
                             color: 'transparent',
@@ -53,7 +57,7 @@ export const AppHeader: React.FC = () => {
                         variant="h6"
                         sx={{
                             fontWeight: 800,
-                            background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
+                            background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
                             backgroundClip: 'text',
                             WebkitBackgroundClip: 'text',
                             color: 'transparent',

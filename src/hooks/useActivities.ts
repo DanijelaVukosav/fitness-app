@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { Activity } from '@/context/types';
+import type { Activity } from '@/api/types/activities.ts';
 import type { GetActivitiesParams, GetActivitiesResponse } from '@/context/ActivitiesContext';
 import { useActivitiesApi } from '@/api/hooks/useActivitiesApi.ts';
 

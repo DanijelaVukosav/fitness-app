@@ -33,7 +33,7 @@ import {
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { type ActivityType, ActivityTypes } from '@/context/types.ts';
+import { type ActivityType, ActivityTypes } from '@/api/types/activities.ts';
 import { useActivitiesFilters } from '@/hooks/useActivitiesFilters.ts';
 import type { ParamType } from '@/api/types.ts';
 
@@ -138,14 +138,15 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                 elevation={0}
                 sx={{
                     background:
-                        'linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(160, 32, 240, 0.05) 100%)',
+                        'linear-gradient(135deg, rgba(10, 120, 171, 0.05) 0%, rgba(160, 32, 240, 0.05) 100%)',
+                    color: '#A020F0',
                     backdropFilter: 'blur(20px)',
-                    border: '1px solid rgba(0, 255, 136, 0.2)',
+                    border: '1px solid rgba(10, 120, 171, 0.2)',
                     borderRadius: '20px',
                     overflow: 'hidden',
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     '&:hover': {
-                        boxShadow: '0 8px 32px rgba(0, 255, 136, 0.15)',
+                        boxShadow: '0 8px 32px rgba(10, 120, 171, 0.15)',
                         transform: 'translateY(-2px)'
                     }
                 }}>
@@ -159,24 +160,23 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                         cursor: 'pointer',
                         transition: 'background-color 0.3s ease',
                         '&:hover': {
-                            backgroundColor: 'rgba(0, 255, 136, 0.05)'
+                            backgroundColor: 'rgba(10, 120, 171, 0.05)'
                         }
                     }}
                     onClick={handleToggleExpand}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <Badge
                             badgeContent={activeFiltersCount}
-                            color="primary"
                             sx={{
                                 '& .MuiBadge-badge': {
-                                    background: 'linear-gradient(45deg, #00FF88, #A020F0)',
+                                    background: 'linear-gradient(45deg, #0A78AB, #A020F0)',
                                     color: 'white',
                                     fontWeight: 'bold'
                                 }
                             }}>
                             <FilterAlt
                                 sx={{
-                                    color: hasActiveFilters ? '#00FF88' : 'rgba(0, 0, 0, 0.6)',
+                                    color: hasActiveFilters ? '#0A78AB' : 'rgba(0, 0, 0, 0.6)',
                                     transition: 'color 0.3s ease'
                                 }}
                             />
@@ -186,7 +186,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                             sx={{
                                 fontWeight: 700,
                                 background: hasActiveFilters
-                                    ? 'linear-gradient(45deg, #00FF88, #A020F0)'
+                                    ? 'linear-gradient(45deg, #0A78AB, #A020F0)'
                                     : 'rgba(0, 0, 0, 0.8)',
                                 backgroundClip: 'text',
                                 WebkitBackgroundClip: 'text',
@@ -221,7 +221,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                             sx={{
                                 transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                                 transition: 'transform 0.3s ease',
-                                color: '#00FF88'
+                                color: '#0A78AB'
                             }}>
                             <ExpandMore />
                         </IconButton>
@@ -238,7 +238,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                     label={`Search: "${filters.search}"`}
                                     onDelete={() => handleRemoveFilter('search')}
                                     sx={{
-                                        background: 'linear-gradient(45deg, #00FF88, #A020F0)',
+                                        background: 'linear-gradient(45deg, #0A78AB, #A020F0)',
                                         color: 'white',
                                         '& .MuiChip-deleteIcon': { color: 'white' }
                                     }}
@@ -251,7 +251,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                     label={filterLabels[filters.type] ?? ''}
                                     onDelete={() => handleRemoveFilter('type')}
                                     sx={{
-                                        background: 'linear-gradient(45deg, #00FF88, #A020F0)',
+                                        background: 'linear-gradient(45deg, #0A78AB, #A020F0)',
                                         color: 'white',
                                         '& .MuiChip-icon': { color: 'white' },
                                         '& .MuiChip-deleteIcon': { color: 'white' }
@@ -265,7 +265,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                     label={`From: ${filters.startDate.toLocaleDateString()}`}
                                     onDelete={() => handleRemoveFilter('startDate')}
                                     sx={{
-                                        background: 'linear-gradient(45deg, #00FF88, #A020F0)',
+                                        background: 'linear-gradient(45deg, #0A78AB, #A020F0)',
                                         color: 'white',
                                         '& .MuiChip-icon': { color: 'white' },
                                         '& .MuiChip-deleteIcon': { color: 'white' }
@@ -279,7 +279,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                     label={`To: ${filters.endDate.toLocaleDateString()}`}
                                     onDelete={() => handleRemoveFilter('endDate')}
                                     sx={{
-                                        background: 'linear-gradient(45deg, #00FF88, #A020F0)',
+                                        background: 'linear-gradient(45deg, #0A78AB, #A020F0)',
                                         color: 'white',
                                         '& .MuiChip-icon': { color: 'white' },
                                         '& .MuiChip-deleteIcon': { color: 'white' }
@@ -292,22 +292,72 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
 
                 {/* Expandable Content */}
                 <Collapse in={isExpanded} timeout={400}>
-                    <Divider sx={{ backgroundColor: 'rgba(0, 255, 136, 0.1)' }} />
+                    <Divider sx={{ backgroundColor: 'rgba(10, 120, 171, 0.1)' }} />
                     <Box sx={{ p: 3, pt: 2 }}>
                         <Stack spacing={3}>
+                            {/* Activity Types */}
+                            <Box>
+                                {/*<Typography*/}
+                                {/*    variant="subtitle2"*/}
+                                {/*    sx={{*/}
+                                {/*        mb: 2,*/}
+                                {/*        fontWeight: 600,*/}
+                                {/*        color: 'rgba(0, 0, 0, 0.8)',*/}
+                                {/*        textTransform: 'uppercase',*/}
+                                {/*        letterSpacing: 1*/}
+                                {/*    }}>*/}
+                                {/*    Activity Types*/}
+                                {/*</Typography>*/}
+                                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                                    {Object.values(ActivityTypes).map((type) => (
+                                        <Chip
+                                            key={type}
+                                            icon={filterIcons[type]}
+                                            label={filterLabels[type]}
+                                            onClick={() => handleTypeFilter(type)}
+                                            variant={filters.type === type ? 'filled' : 'outlined'}
+                                            sx={{
+                                                borderRadius: '12px',
+                                                px: 1,
+                                                py: 0.5,
+                                                height: 'auto',
+                                                fontSize: '0.875rem',
+                                                fontWeight: 600,
+                                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                                cursor: 'pointer',
+                                                ...(filters.type === type
+                                                    ? {
+                                                          background:
+                                                              'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
+                                                          color: 'white',
+                                                          boxShadow:
+                                                              '0 4px 15px rgba(10, 120, 171, 0.4)',
+                                                          transform: 'translateY(-2px) scale(1.05)',
+                                                          '& .MuiChip-icon': {
+                                                              color: 'white'
+                                                          }
+                                                      }
+                                                    : {
+                                                          backgroundColor:
+                                                              'rgba(255, 255, 255, 0.8)',
+                                                          borderColor: 'rgba(10, 120, 171, 0.3)',
+                                                          color: 'rgba(0, 0, 0, 0.8)',
+                                                          '&:hover': {
+                                                              backgroundColor:
+                                                                  'rgba(10, 120, 171, 0.1)',
+                                                              borderColor: '#0A78AB',
+                                                              transform: 'translateY(-2px)',
+                                                              boxShadow:
+                                                                  '0 4px 15px rgba(10, 120, 171, 0.2)'
+                                                          }
+                                                      })
+                                            }}
+                                        />
+                                    ))}
+                                </Stack>
+                            </Box>
                             {/* Search Field */}
                             <Box>
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                        mb: 1,
-                                        fontWeight: 600,
-                                        color: 'rgba(0, 0, 0, 0.8)',
-                                        textTransform: 'uppercase',
-                                        letterSpacing: 1
-                                    }}>
-                                    Search Activities
-                                </Typography>
                                 <TextField
                                     fullWidth
                                     placeholder="Search by title or description..."
@@ -316,7 +366,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
-                                                <Search sx={{ color: '#00FF88' }} />
+                                                <Search sx={{ color: '#0A78AB' }} />
                                             </InputAdornment>
                                         ),
                                         endAdornment: searchTerm && (
@@ -341,80 +391,18 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                             '&:hover': {
                                                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
                                                 transform: 'translateY(-1px)',
-                                                boxShadow: '0 4px 20px rgba(0, 255, 136, 0.1)'
+                                                boxShadow: '0 4px 20px rgba(10, 120, 171, 0.1)'
                                             },
                                             '&.Mui-focused': {
                                                 backgroundColor: 'rgba(255, 255, 255, 1)',
-                                                boxShadow: '0 0 0 2px rgba(0, 255, 136, 0.3)',
+                                                boxShadow: '0 0 0 2px rgba(10, 120, 171, 0.3)',
                                                 '& fieldset': {
-                                                    borderColor: '#00FF88'
+                                                    borderColor: '#0A78AB'
                                                 }
                                             }
                                         }
                                     }}
                                 />
-                            </Box>
-
-                            {/* Activity Types */}
-                            <Box>
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                        mb: 2,
-                                        fontWeight: 600,
-                                        color: 'rgba(0, 0, 0, 0.8)',
-                                        textTransform: 'uppercase',
-                                        letterSpacing: 1
-                                    }}>
-                                    Activity Types
-                                </Typography>
-                                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                                    {Object.values(ActivityTypes).map((type) => (
-                                        <Chip
-                                            key={type}
-                                            icon={filterIcons[type]}
-                                            label={filterLabels[type]}
-                                            onClick={() => handleTypeFilter(type)}
-                                            variant={filters.type === type ? 'filled' : 'outlined'}
-                                            sx={{
-                                                borderRadius: '12px',
-                                                px: 1,
-                                                py: 0.5,
-                                                height: 'auto',
-                                                fontSize: '0.875rem',
-                                                fontWeight: 600,
-                                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                                cursor: 'pointer',
-                                                ...(filters.type === type
-                                                    ? {
-                                                          background:
-                                                              'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
-                                                          color: 'white',
-                                                          boxShadow:
-                                                              '0 4px 15px rgba(0, 255, 136, 0.4)',
-                                                          transform: 'translateY(-2px) scale(1.05)',
-                                                          '& .MuiChip-icon': {
-                                                              color: 'white'
-                                                          }
-                                                      }
-                                                    : {
-                                                          backgroundColor:
-                                                              'rgba(255, 255, 255, 0.8)',
-                                                          borderColor: 'rgba(0, 255, 136, 0.3)',
-                                                          color: 'rgba(0, 0, 0, 0.8)',
-                                                          '&:hover': {
-                                                              backgroundColor:
-                                                                  'rgba(0, 255, 136, 0.1)',
-                                                              borderColor: '#00FF88',
-                                                              transform: 'translateY(-2px)',
-                                                              boxShadow:
-                                                                  '0 4px 15px rgba(0, 255, 136, 0.2)'
-                                                          }
-                                                      })
-                                            }}
-                                        />
-                                    ))}
-                                </Stack>
                             </Box>
 
                             {/* Date Range */}
@@ -452,9 +440,9 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                                             backgroundColor:
                                                                 'rgba(255, 255, 255, 1)',
                                                             boxShadow:
-                                                                '0 0 0 2px rgba(0, 255, 136, 0.3)',
+                                                                '0 0 0 2px rgba(10, 120, 171, 0.3)',
                                                             '& fieldset': {
-                                                                borderColor: '#00FF88'
+                                                                borderColor: '#0A78AB'
                                                             }
                                                         }
                                                     }
@@ -483,9 +471,9 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                                             backgroundColor:
                                                                 'rgba(255, 255, 255, 1)',
                                                             boxShadow:
-                                                                '0 0 0 2px rgba(0, 255, 136, 0.3)',
+                                                                '0 0 0 2px rgba(10, 120, 171, 0.3)',
                                                             '& fieldset': {
-                                                                borderColor: '#00FF88'
+                                                                borderColor: '#0A78AB'
                                                             }
                                                         }
                                                     }

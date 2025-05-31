@@ -2,7 +2,11 @@
 import React, { createContext, type ReactNode, useCallback, useContext, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { activitiesKeys, usePrefetchActivity } from '@/hooks/useActivities';
-import { type Activity, type ActivityType, defaultActivitiesFilters } from '@/context/types';
+import {
+    type Activity,
+    type ActivityType,
+    defaultActivitiesFilters
+} from '@/api/types/activities.ts';
 import type { ParamType, QueryParams } from '@/api/types.ts';
 
 // Enhanced context types

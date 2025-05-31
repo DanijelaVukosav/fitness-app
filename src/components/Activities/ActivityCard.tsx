@@ -1,8 +1,19 @@
 // components/ActivityCard.tsx
-import React from 'react';
-import { Box, Card, CardContent, Chip, IconButton, Typography } from '@mui/material';
-import { Delete, Edit, Schedule } from '@mui/icons-material';
-import { type Activity, ActivityTypes } from '@/context/types.ts';
+import React, { useState } from 'react';
+import {
+    Box,
+    Card,
+    CardContent,
+    Chip,
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Typography
+} from '@mui/material';
+import { Delete, Edit, MoreVert, Schedule } from '@mui/icons-material';
+import { type Activity, ActivityTypes } from '@/api/types/activities.ts';
 
 import runImage from '@/assets/activities/run.png';
 import walkImage from '@/assets/activities/walk.png';
@@ -48,21 +59,50 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
     onEditActivity,
     onDeleteActivity
 }) => {
+    const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+    const [showMobileActions, setShowMobileActions] = useState(false);
+
+    console.log(showMobileActions);
+
     const imageUrl = activityImages[activity.type];
     const gradient = activityGradients[activity.type];
+    const hasActions = onEditActivity || onDeleteActivity;
 
     const handleCardClick = () => {
-        onActivityClick?.(activity);
+        // Only trigger card click if no actions menu is open
+        if (!menuAnchor) {
+            onActivityClick?.(activity);
+        }
     };
 
-    const handleEditClick = (e: React.MouseEvent) => {
+    const handleMenuClick = (e: React.MouseEvent<HTMLElement>) => {
         e.stopPropagation();
+        setMenuAnchor(e.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setMenuAnchor(null);
+    };
+
+    const handleEditClick = (e?: React.MouseEvent) => {
+        e?.stopPropagation();
         onEditActivity?.(activity);
+        handleMenuClose();
     };
 
-    const handleDeleteClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
+    const handleDeleteClick = (e?: React.MouseEvent) => {
+        e?.stopPropagation();
         onDeleteActivity?.(activity);
+        handleMenuClose();
+    };
+
+    // Handle long press for mobile
+    const handleTouchStart = () => {
+        if (hasActions) {
+            setShowMobileActions(true);
+            // Auto-hide after 3 seconds
+            setTimeout(() => setShowMobileActions(false), 3000);
+        }
     };
 
     const formatDate = (date: Date | string) => {
@@ -81,205 +121,343 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
     };
 
     return (
-        <Card
-            onClick={handleCardClick}
-            sx={{
-                position: 'relative',
-                height: 360,
-                borderRadius: '24px',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-                background: 'white',
-                '&:hover': {
-                    transform: 'translateY(-8px) scale(1.02)',
-                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
-                    '& .play-button': {
-                        opacity: 1,
-                        transform: 'scale(1.1)'
-                    },
-                    '& .image-overlay': {
-                        opacity: 0.6
-                    },
-                    '& .action-buttons': {
-                        opacity: 1
-                    }
-                }
-            }}>
-            {/* Image Section - Top Half */}
-            <Box
+        <>
+            <Card
+                onClick={handleCardClick}
+                onTouchStart={handleTouchStart}
                 sx={{
                     position: 'relative',
-                    height: '50%',
-                    backgroundImage: `url(${imageUrl})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    p: 2
+                    height: 360,
+                    borderRadius: '24px',
+                    overflow: 'hidden',
+                    cursor: 'pointer',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+                    background: 'white',
+                    // Mobile-first: always show a subtle lift
+                    transform: 'translateY(0px)',
+                    '&:hover': {
+                        transform: 'translateY(-8px) scale(1.02)',
+                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
+                        '& .desktop-action-buttons': {
+                            opacity: 1
+                        },
+                        '& .image-overlay': {
+                            opacity: 0.6
+                        }
+                    },
+                    // Active state for mobile tap
+                    '&:active': {
+                        transform: 'scale(0.98)',
+                        transition: 'transform 0.1s ease'
+                    }
                 }}>
-                {/* Dark overlay for better text readability */}
+                {/* Image Section - Top Half */}
                 <Box
-                    className="image-overlay"
-                    sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        background:
-                            'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%)',
-                        opacity: 0.4,
-                        transition: 'opacity 0.3s ease',
-                        zIndex: 1
-                    }}
-                />
-
-                {/* Activity Type Chip */}
-                <Chip
-                    label={activity.type}
-                    size="small"
                     sx={{
                         position: 'relative',
-                        zIndex: 2,
-                        background: gradient,
-                        color: 'white',
-                        fontWeight: 700,
-                        fontSize: '0.75rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                        '& .MuiChip-label': { px: 1.5, py: 0.5 }
-                    }}
-                />
-
-                {/* Action Buttons */}
-                <Box
-                    className="action-buttons"
-                    sx={{
-                        position: 'relative',
-                        zIndex: 2,
+                        height: '50%',
+                        backgroundImage: `url(${imageUrl})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
                         display: 'flex',
-                        gap: 0.5,
-                        opacity: 0,
-                        transition: 'opacity 0.3s ease'
+                        alignItems: 'flex-start',
+                        justifyContent: 'space-between',
+                        p: 2
                     }}>
-                    {onEditActivity && (
-                        <IconButton
-                            onClick={handleEditClick}
-                            size="small"
-                            sx={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                backdropFilter: 'blur(10px)',
-                                color: '#42A5F5',
-                                '&:hover': {
-                                    backgroundColor: 'white',
-                                    transform: 'scale(1.1)'
-                                },
-                                transition: 'all 0.2s ease'
-                            }}>
-                            <Edit fontSize="small" />
-                        </IconButton>
-                    )}
+                    {/* Dark overlay for better text readability */}
+                    <Box
+                        className="image-overlay"
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            background:
+                                'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%)',
+                            opacity: 0.4,
+                            transition: 'opacity 0.3s ease',
+                            zIndex: 1
+                        }}
+                    />
 
-                    {onDeleteActivity && (
-                        <IconButton
-                            onClick={handleDeleteClick}
-                            size="small"
+                    {/* Activity Type Chip */}
+                    <Chip
+                        label={activity.type}
+                        size="small"
+                        sx={{
+                            position: 'relative',
+                            zIndex: 2,
+                            background: gradient,
+                            color: 'white',
+                            fontWeight: 700,
+                            fontSize: '0.75rem',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                            '& .MuiChip-label': { px: 1.5, py: 0.5 }
+                        }}
+                    />
+
+                    {/* Mobile/Desktop Action Buttons */}
+                    {hasActions && (
+                        <Box
                             sx={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                backdropFilter: 'blur(10px)',
-                                color: '#FF6B6B',
-                                '&:hover': {
-                                    backgroundColor: 'white',
-                                    transform: 'scale(1.1)'
-                                },
-                                transition: 'all 0.2s ease'
+                                position: 'relative',
+                                zIndex: 2,
+                                display: 'flex',
+                                gap: 0.5
                             }}>
-                            <Delete fontSize="small" />
-                        </IconButton>
+                            {/* Mobile: Always visible menu button */}
+                            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                                <IconButton
+                                    onClick={handleMenuClick}
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                        backdropFilter: 'blur(10px)',
+                                        color: '#333',
+                                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                                        '&:hover': {
+                                            backgroundColor: 'white',
+                                            transform: 'scale(1.05)'
+                                        },
+                                        transition: 'all 0.2s ease'
+                                    }}>
+                                    <MoreVert fontSize="small" />
+                                </IconButton>
+                            </Box>
+
+                            {/* Desktop: Hover-revealed buttons */}
+                            <Box
+                                className="desktop-action-buttons"
+                                sx={{
+                                    display: { xs: 'none', md: 'flex' },
+                                    gap: 0.5,
+                                    opacity: 0,
+                                    transition: 'opacity 0.3s ease'
+                                }}>
+                                {onEditActivity && (
+                                    <IconButton
+                                        onClick={handleEditClick}
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                            backdropFilter: 'blur(10px)',
+                                            color: '#42A5F5',
+                                            '&:hover': {
+                                                backgroundColor: 'white',
+                                                transform: 'scale(1.1)'
+                                            },
+                                            transition: 'all 0.2s ease'
+                                        }}>
+                                        <Edit fontSize="small" />
+                                    </IconButton>
+                                )}
+
+                                {onDeleteActivity && (
+                                    <IconButton
+                                        onClick={handleDeleteClick}
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                            backdropFilter: 'blur(10px)',
+                                            color: '#FF6B6B',
+                                            '&:hover': {
+                                                backgroundColor: 'white',
+                                                transform: 'scale(1.1)'
+                                            },
+                                            transition: 'all 0.2s ease'
+                                        }}>
+                                        <Delete fontSize="small" />
+                                    </IconButton>
+                                )}
+                            </Box>
+
+                            {/* Alternative: Touch-revealed buttons (uncomment to use instead of menu) */}
+                            {/*
+                            <Box
+                                className="mobile-action-buttons"
+                                sx={{
+                                    display: { xs: 'flex', md: 'none' },
+                                    gap: 0.5,
+                                    opacity: showMobileActions ? 1 : 0,
+                                    transform: showMobileActions ? 'scale(1)' : 'scale(0.8)',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    pointerEvents: showMobileActions ? 'auto' : 'none'
+                                }}>
+                                {onEditActivity && (
+                                    <IconButton
+                                        onClick={handleEditClick}
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                            backdropFilter: 'blur(10px)',
+                                            color: '#42A5F5',
+                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                            '&:active': {
+                                                transform: 'scale(0.95)'
+                                            }
+                                        }}>
+                                        <Edit fontSize="small" />
+                                    </IconButton>
+                                )}
+
+                                {onDeleteActivity && (
+                                    <IconButton
+                                        onClick={handleDeleteClick}
+                                        size="small"
+                                        sx={{
+                                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                            backdropFilter: 'blur(10px)',
+                                            color: '#FF6B6B',
+                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                            '&:active': {
+                                                transform: 'scale(0.95)'
+                                            }
+                                        }}>
+                                        <Delete fontSize="small" />
+                                    </IconButton>
+                                )}
+                            </Box>
+                            */}
+                        </Box>
                     )}
                 </Box>
-            </Box>
 
-            {/* Content Section - Bottom Half */}
-            <CardContent
-                sx={{
-                    height: '50%',
-                    p: 3,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                }}>
-                {/* Title and Description */}
-                <Box>
-                    <Typography
-                        variant="h6"
-                        sx={{
-                            fontWeight: 800,
-                            fontSize: '1.3rem',
-                            lineHeight: 1.2,
-                            mb: 1,
-                            color: '#333',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                        }}>
-                        {activity.title}
-                    </Typography>
-
-                    <Typography
-                        variant="body2"
-                        sx={{
-                            color: 'rgba(0, 0, 0, 0.7)',
-                            lineHeight: 1.4,
-                            fontSize: '0.9rem',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            mb: 2
-                        }}>
-                        {activity.description}
-                    </Typography>
-                </Box>
-
-                {/* Duration and Date */}
-                <Box
-                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Schedule
+                {/* Content Section - Bottom Half */}
+                <CardContent
+                    sx={{
+                        height: '50%',
+                        p: 3,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                    }}>
+                    {/* Title and Description */}
+                    <Box>
+                        <Typography
+                            variant="h6"
                             sx={{
-                                fontSize: 18,
-                                color: gradient.includes('FF6B6B') ? '#FF6B6B' : '#42A5F5'
-                            }}
-                        />
+                                fontWeight: 800,
+                                fontSize: '1.3rem',
+                                lineHeight: 1.2,
+                                mb: 1,
+                                color: '#333',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap'
+                            }}>
+                            {activity.title}
+                        </Typography>
+
                         <Typography
                             variant="body2"
                             sx={{
-                                fontWeight: 700,
-                                color: '#333',
-                                fontSize: '0.9rem'
+                                color: 'rgba(0, 0, 0, 0.7)',
+                                lineHeight: 1.4,
+                                fontSize: '0.9rem',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                mb: 2
                             }}>
-                            {activity.duration} min
+                            {activity.description}
                         </Typography>
                     </Box>
 
-                    <Typography
-                        variant="body2"
+                    {/* Duration and Date */}
+                    <Box
                         sx={{
-                            color: 'rgba(0, 0, 0, 0.6)',
-                            fontSize: '0.85rem',
-                            fontWeight: 600
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
                         }}>
-                        {formatDate(activity.date)}
-                    </Typography>
-                </Box>
-            </CardContent>
-        </Card>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <Schedule
+                                sx={{
+                                    fontSize: 18,
+                                    color: gradient.includes('FF6B6B') ? '#FF6B6B' : '#42A5F5'
+                                }}
+                            />
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    fontWeight: 700,
+                                    color: '#333',
+                                    fontSize: '0.9rem'
+                                }}>
+                                {activity.duration} min
+                            </Typography>
+                        </Box>
+
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                color: 'rgba(0, 0, 0, 0.6)',
+                                fontSize: '0.85rem',
+                                fontWeight: 600
+                            }}>
+                            {formatDate(activity.date)}
+                        </Typography>
+                    </Box>
+                </CardContent>
+            </Card>
+
+            {/* Mobile Menu */}
+            <Menu
+                anchorEl={menuAnchor}
+                open={Boolean(menuAnchor)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                }}
+                sx={{
+                    '& .MuiPaper-root': {
+                        borderRadius: '12px',
+                        minWidth: 140,
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+                        border: '1px solid rgba(0, 0, 0, 0.05)'
+                    }
+                }}>
+                {onEditActivity && (
+                    <MenuItem onClick={handleEditClick} sx={{ py: 1.5 }}>
+                        <ListItemIcon sx={{ minWidth: 36 }}>
+                            <Edit fontSize="small" sx={{ color: '#42A5F5' }} />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="Edit"
+                            primaryTypographyProps={{
+                                fontSize: '0.9rem',
+                                fontWeight: 500
+                            }}
+                        />
+                    </MenuItem>
+                )}
+                {onDeleteActivity && (
+                    <MenuItem onClick={handleDeleteClick} sx={{ py: 1.5 }}>
+                        <ListItemIcon sx={{ minWidth: 36 }}>
+                            <Delete fontSize="small" sx={{ color: '#FF6B6B' }} />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary="Delete"
+                            primaryTypographyProps={{
+                                fontSize: '0.9rem',
+                                fontWeight: 500
+                            }}
+                        />
+                    </MenuItem>
+                )}
+            </Menu>
+        </>
     );
 };

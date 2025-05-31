@@ -4,7 +4,7 @@ import type { FC, ReactElement } from 'react';
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#00FF88',
+            main: '#0A78AB',
             dark: '#00CC6A',
             light: '#4DFFAA'
         },
@@ -61,7 +61,7 @@ const theme = createTheme({
             styleOverrides: {
                 body: {
                     scrollbarWidth: 'thin',
-                    scrollbarColor: '#00FF88 #F1F1F1',
+                    scrollbarColor: '#0A78AB #F1F1F1',
                     '&::-webkit-scrollbar': {
                         width: '8px'
                     },
@@ -70,7 +70,7 @@ const theme = createTheme({
                         borderRadius: '8px'
                     },
                     '&::-webkit-scrollbar-thumb': {
-                        background: 'linear-gradient(135deg, #00FF88 0%, #A020F0 100%)',
+                        background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
                         borderRadius: '8px',
                         '&:hover': {
                             background: 'linear-gradient(135deg, #00CC6A 0%, #7B1BB8 100%)'

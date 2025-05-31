@@ -11,27 +11,22 @@ import {
     Typography
 } from '@mui/material';
 import { Close, Warning } from '@mui/icons-material';
-import type { Activity } from '@/api/types/activities.ts';
 
 interface DeleteConfirmationDialogProps {
     open: boolean;
-    activity: Activity | null;
     onClose: () => void;
-    onConfirm: (activityId: string) => void;
+    onConfirm: () => void;
     isDeleting?: boolean;
 }
 
-export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
+export const GoalDeleteModal: React.FC<DeleteConfirmationDialogProps> = ({
     open,
-    activity,
     onClose,
     onConfirm,
     isDeleting = false
 }) => {
     const handleConfirm = () => {
-        if (activity?.id) {
-            onConfirm(activity.id);
-        }
+        onConfirm();
     };
 
     return (
@@ -71,45 +66,8 @@ export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> =
 
             <DialogContent sx={{ pt: 2 }}>
                 <Typography variant="body1" sx={{ mb: 2 }}>
-                    Are you sure you want to delete this activity? This action cannot be undone.
+                    Are you sure you want to delete your goal? This action cannot be undone.
                 </Typography>
-
-                {activity && (
-                    <Box
-                        sx={{
-                            backgroundColor: '#f5f5f5',
-                            borderRadius: '12px',
-                            p: 2,
-                            border: '2px solid #e0e0e0'
-                        }}>
-                        <Typography
-                            variant="subtitle1"
-                            sx={{
-                                fontWeight: 600,
-                                mb: 0.5,
-                                color: '#333'
-                            }}>
-                            {activity.title}
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                color: 'rgba(0, 0, 0, 0.7)',
-                                mb: 1
-                            }}>
-                            {activity.description}
-                        </Typography>
-                        <Typography
-                            variant="caption"
-                            sx={{
-                                color: 'rgba(0, 0, 0, 0.6)',
-                                textTransform: 'uppercase',
-                                fontWeight: 600
-                            }}>
-                            {activity.type} • {activity.duration} min
-                        </Typography>
-                    </Box>
-                )}
             </DialogContent>
 
             <DialogActions sx={{ pt: 2, px: 3, pb: 2 }}>

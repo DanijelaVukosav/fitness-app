@@ -1,6 +1,6 @@
 // hooks/useActivitiesApi.ts
 import { useCallback } from 'react';
-import { type Activity } from '@/context/types';
+import { type Activity } from '@/api/types/activities.ts';
 import type {
     CreateActivityParams,
     GetActivitiesParams,

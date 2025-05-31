@@ -1,6 +1,6 @@
 // api/activitiesApi.ts
 
-import type { Activity } from '@/context/types.ts';
+import type { Activity } from '@/api/types/activities.ts';
 import type {
     CreateActivityParams,
     GetActivitiesParams,

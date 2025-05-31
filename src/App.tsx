@@ -1,9 +1,9 @@
 import './App.css';
 import type { ReactElement } from 'react';
 import { CssBaseline } from '@mui/material';
-import { AppRouter } from '@/router/AppRouter.tsx';
-import { AppProviders } from '@/components/common/AppProviders.tsx';
-import { AppContainer } from '@/components/common/AppContainer.tsx';
+import { AppRouter } from '@/common/router/AppRouter.tsx';
+import { AppProviders } from '@/common/components/AppProviders.tsx';
+import { AppContainer } from '@/common/components/AppContainer.tsx';
 
 function App(): ReactElement {
     return (

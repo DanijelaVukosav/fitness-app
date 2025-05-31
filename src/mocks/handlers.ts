@@ -1,12 +1,16 @@
 // mocks/handlers.ts
 import { http, HttpResponse } from 'msw';
-import { type Activity, type ActivityType, ActivityTypes } from '@/api/types/activities.ts';
+import {
+    type Activity,
+    type ActivityType,
+    ActivityTypes
+} from '@/pages/Activities/services/types.ts';
 import type {
     CreateActivityParams,
     GetActivitiesParams,
     GetActivitiesResponse
-} from '@/context/ActivitiesContext';
-import type { CreateGoalParams, Goal, UpdateGoalParams } from '@/api/types/goal.ts';
+} from '@/pages/Activities/services/ActivitiesContext.tsx';
+import type { CreateGoalParams, Goal, UpdateGoalParams } from '@/pages/Goals/services/goal.ts';
 
 // User Settings Types
 export interface UserSettings {
@@ -60,7 +64,7 @@ let activities: Activity[] = [
         description: 'Daily cardio exercise',
         type: ActivityTypes.HIIT,
         duration: 30,
-        date: new Date('2024-05-29T06:00:00Z'),
+        date: new Date('2025-05-29T06:00:00Z'),
         time: '09:00'
     },
     {
@@ -69,7 +73,7 @@ let activities: Activity[] = [
         description: 'Weekly sync with development team',
         type: ActivityTypes.RUN,
         duration: 60,
-        date: new Date('2024-05-29T09:00:00Z'),
+        date: new Date('2025-05-29T09:00:00Z'),
         time: '09:00'
     },
     {
@@ -78,7 +82,133 @@ let activities: Activity[] = [
         description: 'Weekly grocery run',
         type: ActivityTypes.WALK,
         duration: 45,
-        date: new Date('2024-05-29T15:00:00Z'),
+        date: new Date('2025-05-29T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '4',
+        title: 'Grocery Ride',
+        description: 'Weekly grocery ride',
+        type: ActivityTypes.RIDE,
+        duration: 45,
+        date: new Date('2025-05-28T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '5',
+        title: 'OTHER',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.OTHER,
+        duration: 45,
+        date: new Date('2025-05-27T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '6',
+        title: 'Grocery Hike',
+        description: 'Weekly grocery hike',
+        type: ActivityTypes.HIKE,
+        duration: 45,
+        date: new Date('2025-05-26T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '7',
+        title: 'Swim',
+        description: 'Weekly grocery swim',
+        type: ActivityTypes.SWIM,
+        duration: 45,
+        date: new Date('2025-05-25T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '8',
+        title: 'Workout',
+        description: 'Weekly grocery workout',
+        type: ActivityTypes.WORKOUT,
+        duration: 45,
+        date: new Date('2025-05-24T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '9',
+        title: 'Ride horse',
+        description: 'Weekly grocery ride',
+        type: ActivityTypes.RIDE,
+        duration: 45,
+        date: new Date('2025-05-24T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '10',
+        title: 'Grocery Shopping',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.WALK,
+        duration: 45,
+        date: new Date('2025-05-21T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '11',
+        title: 'Something',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.OTHER,
+        duration: 45,
+        date: new Date('2025-05-22T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '12',
+        title: 'Grocery Shopping',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.WALK,
+        duration: 45,
+        date: new Date('2025-05-20T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '13',
+        title: 'Swim',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.SWIM,
+        duration: 45,
+        date: new Date('2025-05-27T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '14',
+        title: 'WORKOUT',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.WORKOUT,
+        duration: 45,
+        date: new Date('2025-05-03T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '15',
+        title: 'Hiit',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.HIIT,
+        duration: 45,
+        date: new Date('2025-05-25T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '16',
+        title: 'Grocery Shopping',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.WALK,
+        duration: 45,
+        date: new Date('2025-05-24T15:00:00Z'),
+        time: '09:00'
+    },
+    {
+        id: '17',
+        title: 'Grocery Shopping',
+        description: 'Weekly grocery run',
+        type: ActivityTypes.WALK,
+        duration: 45,
+        date: new Date('2025-05-19T15:00:00Z'),
         time: '09:00'
     }
 ];
@@ -146,11 +276,10 @@ const paginateResults = (items: Activity[], page = 1, limit = 10) => {
 export const handlers = [
     // GET /api/activities - Get activities with pagination and filters
     http.get('/mock/activities', async ({ request }) => {
-        await delay(500); // Simulate network delay
-
-        console.log('request', request);
+        await delay(500);
 
         const url = new URL(request.url);
+
         const params: GetActivitiesParams = {
             page: parseInt(url.searchParams.get('page') || '1'),
             limit: parseInt(url.searchParams.get('limit') || '10'),
@@ -238,7 +367,7 @@ export const handlers = [
             title: body.title,
             description: body.description ?? '',
             type: body.type,
-            duration: body.duration || 0,
+            duration: +body.duration || 0,
             date: new Date(body.date),
             time: body.time ?? ''
         };
@@ -349,7 +478,6 @@ export const handlers = [
     // GET /api/activities/stats - Get activities statistics
     http.get('/mock/activities-stats', async ({ request }) => {
         await delay(600);
-        console.log('stats', request);
 
         const url = new URL(request.url);
         const params: GetActivitiesParams = {
@@ -365,9 +493,11 @@ export const handlers = [
         // Apply filters for stats
         const filtered = filterActivities(activities, params);
 
+        console.log('filterd', filtered);
+
         // Calculate statistics
         const totalActivities = filtered.length;
-        const totalDuration = filtered.reduce((sum, activity) => sum + activity.duration, 0);
+        const totalDuration = filtered.reduce((sum, activity) => sum + +activity.duration, 0);
         const averageDuration = totalActivities > 0 ? totalDuration / totalActivities : 0;
 
         // Activities by type

@@ -1,59 +1,74 @@
 // components/ActivitiesGrid.tsx (Updated)
 import { Box, Typography } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { useActivities } from '@/pages/Activities/hooks/useActivities.ts';
 import { useActivitiesContext } from '@/pages/Activities/services/ActivitiesContext.tsx';
+import { PrimaryButton } from '@/common/components/PrimaryButton.tsx';
 
 interface ActivitiesGridProps {
-    itemsPerPage?: number;
     currentPage?: number;
-    showAddCard: boolean;
+    onAddActivity?: () => void; // New prop for handling add activity click
 }
 
 export const ActivitiesGridHeader: React.FC<ActivitiesGridProps> = ({
-    itemsPerPage = 8,
     currentPage = 1,
-    showAddCard = true
+    onAddActivity
 }) => {
     const { filters } = useActivitiesContext();
-
     const { data } = useActivities(filters);
 
-    // Calculate items per page accounting for add card
-    const effectiveItemsPerPage = showAddCard ? itemsPerPage - 1 : itemsPerPage;
-
-    const totalPages = Math.ceil((data?.activities?.length ?? 0) / effectiveItemsPerPage);
+    const handleAddActivity = () => {
+        if (onAddActivity) {
+            onAddActivity();
+        } else {
+            // Default behavior - you can customize this
+            console.log('Add new fitness activity');
+        }
+    };
 
     return (
         <Box
             sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'flex-start',
+                justifyContent: 'space-between',
                 flexWrap: 'wrap',
                 gap: 2,
                 py: 3
             }}>
-            <Typography
-                variant="body2"
-                sx={{
-                    color: 'rgba(0, 0, 0, 0.6)',
-                    fontWeight: 500,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1
-                }}>
-                <Box
-                    component="span"
-                    sx={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: '50%',
-                        backgroundColor: '#10b981',
-                        display: 'inline-block'
-                    }}
+            {/* Add Activity Button - Left Side */}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <PrimaryButton
+                    onClick={handleAddActivity}
+                    label="Add Activity"
+                    icon={<AddIcon />}
                 />
-                Page {currentPage} of {totalPages}
-            </Typography>
+            </Box>
+
+            {/* Pagination Info - Right Side */}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 500,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1
+                    }}>
+                    <Box
+                        component="span"
+                        sx={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: '50%',
+                            backgroundColor: '#10b981',
+                            display: 'inline-block'
+                        }}
+                    />
+                    Page {currentPage} of {data?.totalPages}
+                </Typography>
+            </Box>
         </Box>
     );
 };

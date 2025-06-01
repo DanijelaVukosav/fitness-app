@@ -18,7 +18,7 @@ export const ActivitiesContainer: React.FC = () => {
                 <ActivitiesStats />
                 <FilterContainer />
 
-                <ActivitiesGrid itemsPerPage={8} onAddActivity={openModal} showAddCard={true} />
+                <ActivitiesGrid onAddActivity={openModal} />
 
                 <ActivityModals />
             </React.Fragment>

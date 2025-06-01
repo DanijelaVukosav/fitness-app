@@ -4,7 +4,7 @@ import type { GetActivitiesParams } from '@/pages/Activities/services/Activities
 
 export const defaultActivitiesFilters: GetActivitiesParams = {
     page: 1,
-    limit: 10,
+    limit: 8,
     sortBy: 'date',
     sortOrder: 'desc'
 };

@@ -28,12 +28,14 @@ export const CalendarComponent = () => {
     useEffect(() => {
         updateFilter('startDate', monthStart);
         updateFilter('endDate', monthEnd);
+        updateFilter('limit', 50);
     }, [currentDate, updateFilter]);
 
     // Get activities for current month
     const { data: activitiesData, isLoading } = useActivities({
         startDate: monthStart,
-        endDate: monthEnd
+        endDate: monthEnd,
+        limit: 500
     });
 
     // Calculate goal achievement for each day

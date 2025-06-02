@@ -1,5 +1,4 @@
-// pages/ActivitiesPage.tsx
-import React from 'react';
+import React, { useCallback } from 'react';
 import { PageHero } from '@/common/components/PageHero.tsx';
 import { Box } from '@mui/material';
 import { Target } from 'lucide-react';
@@ -9,9 +8,10 @@ import { PrimaryButton } from '@/common/components/PrimaryButton.tsx';
 
 export const ActivitiesHero: React.FC = () => {
     const navigate = useNavigate();
-    const handleGoalsRedirect = () => {
+
+    const handleGoalsRedirect = useCallback(() => {
         navigate(APPLICATION_ROUTES.GOALS);
-    };
+    }, [navigate]);
 
     return (
         <PageHero
@@ -35,10 +35,11 @@ export const ActivitiesHero: React.FC = () => {
                     justifyContent: { xs: 'center', md: 'flex-end' }
                 }}>
                 <PrimaryButton
-                    label={'Performance Goals'}
                     onClick={handleGoalsRedirect}
-                    icon={<Target size={18} />}
-                />
+                    startIcon={<Target size={18} />}
+                    sx={{ paddingY: 1, paddingX: 3 }}>
+                    Performance Goals
+                </PrimaryButton>
             </Box>
         </PageHero>
     );

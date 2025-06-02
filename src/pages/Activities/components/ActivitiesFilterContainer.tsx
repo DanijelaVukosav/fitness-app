@@ -1,5 +1,4 @@
-// components/FilterContainer.tsx
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
     Badge,
     Box,
@@ -63,30 +62,36 @@ interface FilterContainerProps {
     onFilterChange?: (filters: Record<string, ParamType>) => void;
 }
 
+const TYPE_DELIMITER = ',';
+
 export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange }) => {
     const { filters, updateFilter, clearFilters, hasActiveFilters } = useActivitiesFilters();
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState(filters.search || '');
 
-    // Count active filters for badge
-    const activeFiltersCount = [
-        filters.search,
-        filters.type,
-        filters.startDate,
-        filters.endDate
-    ].filter(Boolean).length;
+    const activeFiltersCount = useMemo(
+        () =>
+            [filters.search, filters.types, filters.startDate, filters.endDate].filter(Boolean)
+                .length,
+        [filters]
+    );
+
+    const filterTypes = useMemo(() => filters.types?.split(TYPE_DELIMITER) ?? [], [filters.types]);
 
     const handleToggleExpand = useCallback(() => {
         setIsExpanded((prev) => !prev);
     }, []);
 
     const handleTypeFilter = useCallback(
-        (type: ActivityType) => {
-            const newType = filters.type === type ? undefined : type;
-            updateFilter('type', newType);
-            onFilterChange?.({ ...filters, type: newType });
+        (type: string) => {
+            const types = filterTypes.includes(type)
+                ? filterTypes.filter((t: string) => t !== type)
+                : [...filterTypes, type];
+            const typesToString = types?.length > 0 ? types.join(TYPE_DELIMITER) : undefined;
+            updateFilter('types', typesToString);
+            onFilterChange?.({ ...filters, type: typesToString });
         },
-        [filters, updateFilter, onFilterChange]
+        [filters, updateFilter, onFilterChange, filterTypes]
     );
 
     const handleSearchChange = useCallback(
@@ -101,7 +106,6 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
 
     const handleStartDateChange = useCallback(
         (date: Date | null) => {
-            console.log('start datee', date);
             updateFilter('startDate', date);
             onFilterChange?.({ ...filters, startDate: date });
         },
@@ -116,11 +120,15 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
         [filters, updateFilter, onFilterChange]
     );
 
-    const handleClearAllFilters = useCallback(() => {
-        setSearchTerm('');
-        clearFilters();
-        onFilterChange?.({});
-    }, [clearFilters, onFilterChange]);
+    const handleClearAllFilters = useCallback(
+        (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            e.stopPropagation();
+            setSearchTerm('');
+            clearFilters();
+            onFilterChange?.({});
+        },
+        [clearFilters, onFilterChange]
+    );
 
     const handleRemoveFilter = useCallback(
         (filterKey: string) => {
@@ -151,7 +159,6 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                         transform: 'translateY(-2px)'
                     }
                 }}>
-                {/* Header - Always Visible */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -203,10 +210,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                             <Tooltip title="Clear All Filters">
                                 <IconButton
                                     size="small"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleClearAllFilters();
-                                    }}
+                                    onClick={handleClearAllFilters}
                                     sx={{
                                         color: '#ff4444',
                                         '&:hover': {
@@ -229,7 +233,6 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                     </Box>
                 </Box>
 
-                {/* Active Filters Summary - Always Visible */}
                 {hasActiveFilters && !isExpanded && (
                     <Box sx={{ px: 2, pb: 2 }}>
                         <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
@@ -245,12 +248,12 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                     }}
                                 />
                             )}
-                            {filters.type && (
+                            {filterTypes.map((type: string) => (
                                 <Chip
                                     size="small"
-                                    icon={filterIcons[filters.type] ?? ''}
-                                    label={filterLabels[filters.type] ?? ''}
-                                    onDelete={() => handleRemoveFilter('type')}
+                                    icon={filterIcons[type as ActivityType] ?? ''}
+                                    label={filterLabels[type as ActivityType] ?? ''}
+                                    onDelete={() => handleTypeFilter(type)}
                                     sx={{
                                         background: 'linear-gradient(45deg, #0A78AB, #A020F0)',
                                         color: 'white',
@@ -258,7 +261,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                         '& .MuiChip-deleteIcon': { color: 'white' }
                                     }}
                                 />
-                            )}
+                            ))}
                             {filters.startDate && (
                                 <Chip
                                     size="small"
@@ -291,12 +294,10 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                     </Box>
                 )}
 
-                {/* Expandable Content */}
                 <Collapse in={isExpanded} timeout={400}>
                     <Divider sx={{ backgroundColor: 'rgba(10, 120, 171, 0.1)' }} />
                     <Box sx={{ p: 3, pt: 2 }}>
                         <Stack spacing={3}>
-                            {/* Activity Types */}
                             <Box>
                                 <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                                     {Object.values(ActivityTypes).map((type) => (
@@ -305,7 +306,9 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                             icon={filterIcons[type]}
                                             label={filterLabels[type]}
                                             onClick={() => handleTypeFilter(type)}
-                                            variant={filters.type === type ? 'filled' : 'outlined'}
+                                            variant={
+                                                filterTypes.includes(type) ? 'filled' : 'outlined'
+                                            }
                                             sx={{
                                                 borderRadius: '12px',
                                                 px: 1,
@@ -315,7 +318,7 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                                 fontWeight: 600,
                                                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                                 cursor: 'pointer',
-                                                ...(filters.type === type
+                                                ...(filterTypes.includes(type)
                                                     ? {
                                                           background:
                                                               'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
@@ -349,7 +352,6 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                     ))}
                                 </Stack>
                             </Box>
-                            {/* Search Field */}
                             <Box>
                                 <TextField
                                     fullWidth
@@ -398,7 +400,6 @@ export const FilterContainer: React.FC<FilterContainerProps> = ({ onFilterChange
                                 />
                             </Box>
 
-                            {/* Date Range */}
                             <Box>
                                 <Typography
                                     variant="subtitle2"

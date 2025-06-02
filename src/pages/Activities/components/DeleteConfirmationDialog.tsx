@@ -1,5 +1,4 @@
-// components/Activities/DeleteConfirmationDialog.tsx
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
     Box,
     Button,
@@ -28,11 +27,11 @@ export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> =
     onConfirm,
     isDeleting = false
 }) => {
-    const handleConfirm = () => {
+    const handleConfirm = useCallback(() => {
         if (activity?.id) {
             onConfirm(activity.id);
         }
-    };
+    }, [activity?.id, onConfirm]);
 
     return (
         <Dialog

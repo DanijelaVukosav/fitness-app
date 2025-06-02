@@ -1,5 +1,4 @@
-// components/ActivityCard.tsx
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     Box,
     Card,
@@ -60,52 +59,45 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
     onDeleteActivity
 }) => {
     const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
-    const [showMobileActions, setShowMobileActions] = useState(false);
-
-    console.log(showMobileActions);
 
     const imageUrl = activityImages[activity.type];
     const gradient = activityGradients[activity.type];
     const hasActions = onEditActivity || onDeleteActivity;
 
-    const handleCardClick = () => {
-        // Only trigger card click if no actions menu is open
+    const handleCardClick = useCallback(() => {
         if (!menuAnchor) {
             onActivityClick?.(activity);
         }
-    };
+    }, [activity, menuAnchor, onActivityClick]);
 
-    const handleMenuClick = (e: React.MouseEvent<HTMLElement>) => {
+    const handleMenuClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
         e.stopPropagation();
         setMenuAnchor(e.currentTarget);
-    };
+    }, []);
 
-    const handleMenuClose = () => {
+    const handleMenuClose = useCallback(() => {
         setMenuAnchor(null);
-    };
+    }, []);
 
-    const handleEditClick = (e?: React.MouseEvent) => {
-        e?.stopPropagation();
-        onEditActivity?.(activity);
-        handleMenuClose();
-    };
+    const handleEditClick = useCallback(
+        (e?: React.MouseEvent) => {
+            e?.stopPropagation();
+            onEditActivity?.(activity);
+            handleMenuClose();
+        },
+        [activity, handleMenuClose, onEditActivity]
+    );
 
-    const handleDeleteClick = (e?: React.MouseEvent) => {
-        e?.stopPropagation();
-        onDeleteActivity?.(activity);
-        handleMenuClose();
-    };
+    const handleDeleteClick = useCallback(
+        (e?: React.MouseEvent) => {
+            e?.stopPropagation();
+            onDeleteActivity?.(activity);
+            handleMenuClose();
+        },
+        [activity, handleMenuClose, onDeleteActivity]
+    );
 
-    // Handle long press for mobile
-    const handleTouchStart = () => {
-        if (hasActions) {
-            setShowMobileActions(true);
-            // Auto-hide after 3 seconds
-            setTimeout(() => setShowMobileActions(false), 3000);
-        }
-    };
-
-    const formatDate = (date: Date | string) => {
+    const formatDate = useCallback((date: Date | string) => {
         let activityDate: Date;
 
         if (typeof date === 'string') {
@@ -114,17 +106,19 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             activityDate = date;
         }
 
-        return activityDate.toLocaleDateString('en-US', {
+        return activityDate.toLocaleString('en-US', {
             month: 'short',
-            day: 'numeric'
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: false
         });
-    };
+    }, []);
 
     return (
         <>
             <Card
                 onClick={handleCardClick}
-                onTouchStart={handleTouchStart}
                 sx={{
                     position: 'relative',
                     height: 360,
@@ -134,7 +128,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
                     background: 'white',
-                    // Mobile-first: always show a subtle lift
                     transform: 'translateY(0px)',
                     '&:hover': {
                         transform: 'translateY(-8px) scale(1.02)',
@@ -146,13 +139,11 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                             opacity: 0.6
                         }
                     },
-                    // Active state for mobile tap
                     '&:active': {
                         transform: 'scale(0.98)',
                         transition: 'transform 0.1s ease'
                     }
                 }}>
-                {/* Image Section - Top Half */}
                 <Box
                     sx={{
                         position: 'relative',
@@ -166,7 +157,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                         justifyContent: 'space-between',
                         p: 2
                     }}>
-                    {/* Dark overlay for better text readability */}
                     <Box
                         className="image-overlay"
                         sx={{
@@ -183,7 +173,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                         }}
                     />
 
-                    {/* Activity Type Chip */}
                     <Chip
                         label={activity.type}
                         size="small"
@@ -201,7 +190,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                         }}
                     />
 
-                    {/* Mobile/Desktop Action Buttons */}
                     {hasActions && (
                         <Box
                             sx={{
@@ -210,7 +198,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                                 display: 'flex',
                                 gap: 0.5
                             }}>
-                            {/* Mobile: Always visible menu button */}
                             <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                                 <IconButton
                                     onClick={handleMenuClick}
@@ -230,7 +217,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                                 </IconButton>
                             </Box>
 
-                            {/* Desktop: Hover-revealed buttons */}
                             <Box
                                 className="desktop-action-buttons"
                                 sx={{
@@ -275,59 +261,10 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                                     </IconButton>
                                 )}
                             </Box>
-
-                            {/* Alternative: Touch-revealed buttons (uncomment to use instead of menu) */}
-                            {/*
-                            <Box
-                                className="mobile-action-buttons"
-                                sx={{
-                                    display: { xs: 'flex', md: 'none' },
-                                    gap: 0.5,
-                                    opacity: showMobileActions ? 1 : 0,
-                                    transform: showMobileActions ? 'scale(1)' : 'scale(0.8)',
-                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    pointerEvents: showMobileActions ? 'auto' : 'none'
-                                }}>
-                                {onEditActivity && (
-                                    <IconButton
-                                        onClick={handleEditClick}
-                                        size="small"
-                                        sx={{
-                                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                                            backdropFilter: 'blur(10px)',
-                                            color: '#42A5F5',
-                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                                            '&:active': {
-                                                transform: 'scale(0.95)'
-                                            }
-                                        }}>
-                                        <Edit fontSize="small" />
-                                    </IconButton>
-                                )}
-
-                                {onDeleteActivity && (
-                                    <IconButton
-                                        onClick={handleDeleteClick}
-                                        size="small"
-                                        sx={{
-                                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                                            backdropFilter: 'blur(10px)',
-                                            color: '#FF6B6B',
-                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                                            '&:active': {
-                                                transform: 'scale(0.95)'
-                                            }
-                                        }}>
-                                        <Delete fontSize="small" />
-                                    </IconButton>
-                                )}
-                            </Box>
-                            */}
                         </Box>
                     )}
                 </Box>
 
-                {/* Content Section - Bottom Half */}
                 <CardContent
                     sx={{
                         height: '50%',
@@ -336,7 +273,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                         flexDirection: 'column',
                         justifyContent: 'space-between'
                     }}>
-                    {/* Title and Description */}
                     <Box>
                         <Typography
                             variant="h6"
@@ -370,7 +306,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                         </Typography>
                     </Box>
 
-                    {/* Duration and Date */}
                     <Box
                         sx={{
                             display: 'flex',
@@ -408,7 +343,6 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
                 </CardContent>
             </Card>
 
-            {/* Mobile Menu */}
             <Menu
                 anchorEl={menuAnchor}
                 open={Boolean(menuAnchor)}
@@ -461,3 +395,5 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         </>
     );
 };
+
+export const MemoizedActivityCard = React.memo(ActivityCard);

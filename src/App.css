@@ -1,6 +1,9 @@
 body {
-  background: radial-gradient(circle at 20% 20%, rgba(10, 120, 171, 0.15) 0%, transparent 50%),radial-gradient(circle at 80% 80%, rgba(160, 32, 240, 0.15) 0%, transparent 50%),radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%)
+  background: radial-gradient(circle at 20% 20%, rgba(10, 120, 171, 0.15) 0%, transparent 50%),radial-gradient(circle at 80% 80%, rgba(160, 32, 240, 0.15) 0%, transparent 50%),radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
 
+  @media only screen and (max-width: 600px) {
+  max-width: 100vw;
+  }
 }
 #root {
   /*max-width: 1680px;*/
@@ -8,9 +11,9 @@ body {
   padding: 2rem;
   text-align: center;
 
- @media screen (max-width: 600px) {
-   padding: 2rem 0;
- }
+  @media only screen and (max-width: 600px) {
+    max-width: 100vw;
+  }
 }
 
 .logo {

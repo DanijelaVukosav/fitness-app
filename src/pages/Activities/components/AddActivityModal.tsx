@@ -1,5 +1,4 @@
-// components/AddActivityModal.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
     Box,
@@ -22,6 +21,7 @@ import {
     Close,
     Description,
     FitnessCenter,
+    Save,
     Schedule
 } from '@mui/icons-material';
 import {
@@ -30,7 +30,6 @@ import {
     ActivityTypes
 } from '@/pages/Activities/services/types.ts';
 
-// Import activity images
 import runImage from '@/assets/activities/run.png';
 import walkImage from '@/assets/activities/walk.png';
 import hikeImage from '@/assets/activities/hike.png';
@@ -107,7 +106,7 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                 description: activity.description,
                 type: activity.type,
                 duration: activity.duration,
-                date: activityDate,
+                date: activityDate.toISOString().split('T')[0],
                 time: activity.time || ''
             });
         } else if (open && activity === null) {
@@ -119,7 +118,6 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
         setIsSubmitting(true);
         setProgress(0);
 
-        // Simulate progress
         const progressInterval = setInterval(() => {
             setProgress((prev) => {
                 if (prev >= 100) {
@@ -131,10 +129,8 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
         }, 100);
 
         try {
-            // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 1000));
 
-            // Combine date and time into a single Date object
             const activityDateTime = new Date(`${data.date}T${data.time}`);
 
             const newActivity = {
@@ -149,7 +145,6 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
 
             onSubmit(newActivity);
 
-            // Reset form
             reset({
                 title: '',
                 description: '',
@@ -172,12 +167,12 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
         }
     };
 
-    const handleClose = (): void => {
+    const handleClose = useCallback((): void => {
         if (!isSubmitting) {
             reset();
             onClose();
         }
-    };
+    }, [isSubmitting, onClose, reset]);
 
     return (
         <Dialog
@@ -196,7 +191,6 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                     overflow: 'hidden'
                 }
             }}>
-            {/* Progress bar */}
             {isSubmitting && (
                 <LinearProgress
                     variant="determinate"
@@ -251,7 +245,6 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
             <DialogContent sx={{ p: 4 }}>
                 <form onSubmit={handleSubmit(onFormSubmit)}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 5 }}>
-                        {/* Title Field */}
                         <Controller
                             name="title"
                             control={control}
@@ -349,7 +342,6 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                             )}
                         />
 
-                        {/* Date and Time Fields */}
                         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
                             <Controller
                                 name="date"
@@ -424,7 +416,6 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                             />
                         </Box>
 
-                        {/* Duration Field */}
                         <Controller
                             name="duration"
                             control={control}
@@ -463,7 +454,6 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                             )}
                         />
 
-                        {/* Description Field */}
                         <Controller
                             name="description"
                             control={control}
@@ -503,7 +493,6 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                             )}
                         />
 
-                        {/* Action Buttons */}
                         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                             <Button
                                 variant="outlined"
@@ -511,7 +500,7 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                 disabled={isSubmitting}
                                 sx={{
                                     flex: 1,
-                                    borderRadius: '16px',
+                                    borderRadius: '50px',
                                     py: 1.5,
                                     fontWeight: 700,
                                     border: '2px solid rgba(0, 0, 0, 0.1)',
@@ -523,15 +512,14 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                                 }}>
                                 Cancel
                             </Button>
-                            {/*<PrimaryButton onClick={} label={} />/*/}
-                            {/*TODO: make primary button as styled button*/}
                             <Button
                                 type="submit"
                                 variant="contained"
                                 disabled={!isValid || isSubmitting}
+                                startIcon={<Save />}
                                 sx={{
                                     flex: 2,
-                                    borderRadius: '16px',
+                                    borderRadius: '50px',
                                     py: 1.5,
                                     fontWeight: 800,
                                     fontSize: '1rem',

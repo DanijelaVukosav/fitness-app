@@ -17,7 +17,6 @@ export const GridSkeleton: FC = () => {
                             border: '1px solid rgba(255, 255, 255, 0.2)',
                             position: 'relative'
                         }}>
-                        {/* Card Header with Image Skeleton */}
                         <Box sx={{ position: 'relative', height: '160px' }}>
                             <Skeleton
                                 variant="rectangular"
@@ -31,7 +30,6 @@ export const GridSkeleton: FC = () => {
                                     animation: 'shimmer 1.5s infinite'
                                 }}
                             />
-                            {/* Activity Type Badge Skeleton */}
                             <Box
                                 sx={{
                                     position: 'absolute',
@@ -48,7 +46,6 @@ export const GridSkeleton: FC = () => {
                                     }}
                                 />
                             </Box>
-                            {/* Favorite Icon Skeleton */}
                             <Box
                                 sx={{
                                     position: 'absolute',
@@ -64,9 +61,7 @@ export const GridSkeleton: FC = () => {
                             </Box>
                         </Box>
 
-                        {/* Card Content */}
                         <Box sx={{ p: 3 }}>
-                            {/* Title Skeleton */}
                             <Skeleton
                                 variant="text"
                                 height={28}
@@ -78,7 +73,6 @@ export const GridSkeleton: FC = () => {
                                 }}
                             />
 
-                            {/* Description Skeleton */}
                             <Box sx={{ mb: 3 }}>
                                 <Skeleton
                                     variant="text"
@@ -94,7 +88,6 @@ export const GridSkeleton: FC = () => {
                                 />
                             </Box>
 
-                            {/* Stats Row Skeleton */}
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -102,7 +95,6 @@ export const GridSkeleton: FC = () => {
                                     alignItems: 'center',
                                     mb: 2
                                 }}>
-                                {/* Duration Stat */}
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <Skeleton variant="circular" width={20} height={20} />
                                     <Skeleton
@@ -113,7 +105,6 @@ export const GridSkeleton: FC = () => {
                                     />
                                 </Box>
 
-                                {/* Calories Stat */}
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <Skeleton variant="circular" width={20} height={20} />
                                     <Skeleton
@@ -124,7 +115,6 @@ export const GridSkeleton: FC = () => {
                                     />
                                 </Box>
 
-                                {/* Difficulty Stat */}
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <Skeleton variant="circular" width={20} height={20} />
                                     <Skeleton
@@ -136,7 +126,6 @@ export const GridSkeleton: FC = () => {
                                 </Box>
                             </Box>
 
-                            {/* Action Button Skeleton */}
                             <Skeleton
                                 variant="rectangular"
                                 width="100%"

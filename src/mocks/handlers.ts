@@ -55,166 +55,290 @@ export interface WeeklyProgress {
     targetType: 'count' | 'duration';
     dailyProgress: GoalProgress[];
 }
-
-// Mock data storage
 let activities: Activity[] = [
     {
         id: '1',
-        title: 'Morning Run',
-        description: 'Daily cardio exercise',
-        type: ActivityTypes.HIIT,
-        duration: 30,
-        date: new Date('2025-05-29T06:00:00Z'),
-        time: '09:00'
+        title: 'Morning Trail Run',
+        description: 'Early morning 5K run through the forest trail',
+        type: ActivityTypes.RUN,
+        duration: 35,
+        date: new Date('2025-05-01T06:00:00Z'),
+        time: '06:00'
     },
     {
         id: '2',
-        title: 'Team Meeting',
-        description: 'Weekly sync with development team',
-        type: ActivityTypes.RUN,
-        duration: 60,
-        date: new Date('2025-05-29T09:00:00Z'),
-        time: '09:00'
+        title: 'City Walk & Coffee',
+        description: 'Leisurely walk downtown with coffee stop',
+        type: ActivityTypes.WALK,
+        duration: 50,
+        date: new Date('2025-05-02T09:30:00Z'),
+        time: '09:30'
     },
     {
         id: '3',
-        title: 'Grocery Shopping',
-        description: 'Weekly grocery run',
-        type: ActivityTypes.WALK,
-        duration: 45,
-        date: new Date('2025-05-29T15:00:00Z'),
-        time: '09:00'
+        title: 'Mountain Hike',
+        description: 'Challenging hike up Eagle Peak with scenic views',
+        type: ActivityTypes.HIKE,
+        duration: 120,
+        date: new Date('2025-05-03T07:00:00Z'),
+        time: '07:00'
     },
     {
         id: '4',
-        title: 'Grocery Ride',
-        description: 'Weekly grocery ride',
+        title: 'Evening Bike Ride',
+        description: 'Peaceful bike ride along the lakefront path',
         type: ActivityTypes.RIDE,
         duration: 45,
-        date: new Date('2025-05-28T15:00:00Z'),
-        time: '09:00'
+        date: new Date('2025-05-04T18:00:00Z'),
+        time: '18:00'
     },
     {
         id: '5',
-        title: 'OTHER',
-        description: 'Weekly grocery run',
-        type: ActivityTypes.OTHER,
-        duration: 45,
-        date: new Date('2025-05-27T15:00:00Z'),
-        time: '09:00'
+        title: 'Pool Swimming',
+        description: 'Lap swimming session at the community pool',
+        type: ActivityTypes.SWIM,
+        duration: 40,
+        date: new Date('2025-05-05T17:30:00Z'),
+        time: '17:30'
     },
     {
         id: '6',
-        title: 'Grocery Hike',
-        description: 'Weekly grocery hike',
-        type: ActivityTypes.HIKE,
-        duration: 45,
-        date: new Date('2025-05-26T15:00:00Z'),
-        time: '09:00'
+        title: 'Full Body Workout',
+        description: 'Strength training session focusing on compound movements',
+        type: ActivityTypes.WORKOUT,
+        duration: 60,
+        date: new Date('2025-05-06T16:00:00Z'),
+        time: '16:00'
     },
     {
         id: '7',
-        title: 'Swim',
-        description: 'Weekly grocery swim',
-        type: ActivityTypes.SWIM,
-        duration: 45,
-        date: new Date('2025-05-25T15:00:00Z'),
-        time: '09:00'
+        title: 'HIIT Cardio Blast',
+        description: 'High-intensity interval training with burpees and sprints',
+        type: ActivityTypes.HIIT,
+        duration: 25,
+        date: new Date('2025-05-07T07:15:00Z'),
+        time: '07:15'
     },
     {
         id: '8',
-        title: 'Workout',
-        description: 'Weekly grocery workout',
-        type: ActivityTypes.WORKOUT,
-        duration: 45,
-        date: new Date('2025-05-24T15:00:00Z'),
-        time: '09:00'
+        title: 'Yoga & Meditation',
+        description: 'Relaxing yoga session followed by mindfulness meditation',
+        type: ActivityTypes.OTHER,
+        duration: 75,
+        date: new Date('2025-05-08T19:00:00Z'),
+        time: '19:00'
     },
     {
         id: '9',
-        title: 'Ride horse',
-        description: 'Weekly grocery ride',
-        type: ActivityTypes.RIDE,
+        title: 'Interval Running',
+        description: 'Speed work with 400m intervals at the track',
+        type: ActivityTypes.RUN,
         duration: 45,
-        date: new Date('2025-05-24T15:00:00Z'),
-        time: '09:00'
+        date: new Date('2025-05-09T06:30:00Z'),
+        time: '06:30'
     },
     {
         id: '10',
-        title: 'Grocery Shopping',
-        description: 'Weekly grocery run',
+        title: 'Nature Walk',
+        description: 'Mindful walk through the botanical gardens',
         type: ActivityTypes.WALK,
-        duration: 45,
-        date: new Date('2025-05-21T15:00:00Z'),
-        time: '09:00'
+        duration: 35,
+        date: new Date('2025-05-10T15:00:00Z'),
+        time: '15:00'
     },
     {
         id: '11',
-        title: 'Something',
-        description: 'Weekly grocery run',
-        type: ActivityTypes.OTHER,
-        duration: 45,
-        date: new Date('2025-05-22T15:00:00Z'),
-        time: '09:00'
+        title: 'Coastal Hike',
+        description: 'Scenic cliff-side hike with ocean views',
+        type: ActivityTypes.HIKE,
+        duration: 90,
+        date: new Date('2025-05-11T08:00:00Z'),
+        time: '08:00'
     },
     {
         id: '12',
-        title: 'Grocery Shopping',
-        description: 'Weekly grocery run',
-        type: ActivityTypes.WALK,
-        duration: 45,
-        date: new Date('2025-05-20T15:00:00Z'),
-        time: '09:00'
+        title: 'Mountain Biking',
+        description: 'Technical trail riding through pine forests',
+        type: ActivityTypes.RIDE,
+        duration: 75,
+        date: new Date('2025-05-12T14:00:00Z'),
+        time: '14:00'
     },
     {
         id: '13',
-        title: 'Swim',
-        description: 'Weekly grocery run',
+        title: 'Open Water Swimming',
+        description: 'Swimming session at the lake with breathwork',
         type: ActivityTypes.SWIM,
-        duration: 45,
-        date: new Date('2025-05-27T15:00:00Z'),
-        time: '09:00'
+        duration: 50,
+        date: new Date('2025-05-13T16:30:00Z'),
+        time: '16:30'
     },
     {
         id: '14',
-        title: 'WORKOUT',
-        description: 'Weekly grocery run',
+        title: 'Upper Body Focus',
+        description: 'Gym session targeting chest, shoulders, and arms',
         type: ActivityTypes.WORKOUT,
-        duration: 45,
-        date: new Date('2025-05-03T15:00:00Z'),
-        time: '09:00'
+        duration: 55,
+        date: new Date('2025-05-14T17:00:00Z'),
+        time: '17:00'
     },
     {
         id: '15',
-        title: 'Hiit',
-        description: 'Weekly grocery run',
+        title: 'Tabata Training',
+        description: '20-second max effort intervals with 10-second rest',
         type: ActivityTypes.HIIT,
-        duration: 45,
-        date: new Date('2025-05-25T15:00:00Z'),
-        time: '09:00'
+        duration: 20,
+        date: new Date('2025-05-15T12:00:00Z'),
+        time: '12:00'
     },
     {
         id: '16',
-        title: 'Grocery Shopping',
-        description: 'Weekly grocery run',
-        type: ActivityTypes.WALK,
-        duration: 45,
-        date: new Date('2025-05-24T15:00:00Z'),
-        time: '09:00'
+        title: 'Rock Climbing',
+        description: 'Indoor bouldering session at the climbing gym',
+        type: ActivityTypes.OTHER,
+        duration: 90,
+        date: new Date('2025-05-16T18:30:00Z'),
+        time: '18:30'
     },
     {
         id: '17',
-        title: 'Grocery Shopping',
-        description: 'Weekly grocery run',
+        title: 'Long Distance Run',
+        description: '10K training run preparing for upcoming race',
+        type: ActivityTypes.RUN,
+        duration: 55,
+        date: new Date('2025-05-17T06:00:00Z'),
+        time: '06:00'
+    },
+    {
+        id: '18',
+        title: 'Dog Park Walk',
+        description: 'Relaxed walk with the dog at the local park',
         type: ActivityTypes.WALK,
+        duration: 40,
+        date: new Date('2025-05-18T10:00:00Z'),
+        time: '10:00'
+    },
+    {
+        id: '19',
+        title: 'Waterfall Hike',
+        description: 'Adventure hike to hidden waterfall with photography',
+        type: ActivityTypes.HIKE,
+        duration: 110,
+        date: new Date('2025-05-19T07:30:00Z'),
+        time: '07:30'
+    },
+    {
+        id: '20',
+        title: 'City Bike Tour',
+        description: 'Exploring downtown neighborhoods on two wheels',
+        type: ActivityTypes.RIDE,
+        duration: 65,
+        date: new Date('2025-05-20T16:00:00Z'),
+        time: '16:00'
+    },
+    {
+        id: '21',
+        title: 'Aqua Aerobics',
+        description: 'Water-based fitness class with resistance exercises',
+        type: ActivityTypes.SWIM,
         duration: 45,
-        date: new Date('2025-05-19T15:00:00Z'),
-        time: '09:00'
+        date: new Date('2025-05-21T11:00:00Z'),
+        time: '11:00'
+    },
+    {
+        id: '22',
+        title: 'Leg Day Workout',
+        description: 'Intense lower body training with squats and deadlifts',
+        type: ActivityTypes.WORKOUT,
+        duration: 70,
+        date: new Date('2025-05-22T17:30:00Z'),
+        time: '17:30'
+    },
+    {
+        id: '23',
+        title: 'Sprint Intervals',
+        description: 'High-intensity sprint training for speed development',
+        type: ActivityTypes.HIIT,
+        duration: 30,
+        date: new Date('2025-05-23T07:00:00Z'),
+        time: '07:00'
+    },
+    {
+        id: '24',
+        title: 'Paddleboard Session',
+        description: 'Stand-up paddleboarding on calm lake waters',
+        type: ActivityTypes.OTHER,
+        duration: 80,
+        date: new Date('2025-05-24T14:30:00Z'),
+        time: '14:30'
+    },
+    {
+        id: '25',
+        title: 'Recovery Run',
+        description: 'Easy-paced recovery run focusing on form',
+        type: ActivityTypes.RUN,
+        duration: 30,
+        date: new Date('2025-05-25T08:00:00Z'),
+        time: '08:00'
+    },
+    {
+        id: '26',
+        title: 'Neighborhood Stroll',
+        description: 'Casual evening walk around the neighborhood',
+        type: ActivityTypes.WALK,
+        duration: 25,
+        date: new Date('2025-05-26T19:30:00Z'),
+        time: '19:30'
+    },
+    {
+        id: '27',
+        title: 'Sunrise Hike',
+        description: 'Early morning hike to catch the sunrise from the summit',
+        type: ActivityTypes.HIKE,
+        duration: 100,
+        date: new Date('2025-05-27T05:30:00Z'),
+        time: '05:30'
+    },
+    {
+        id: '28',
+        title: 'Gravel Bike Adventure',
+        description: 'Off-road cycling adventure on gravel paths',
+        type: ActivityTypes.RIDE,
+        duration: 85,
+        date: new Date('2025-05-28T13:00:00Z'),
+        time: '13:00'
+    },
+    {
+        id: '29',
+        title: 'Beach Swimming',
+        description: 'Open water swimming session at the beach',
+        type: ActivityTypes.SWIM,
+        duration: 35,
+        date: new Date('2025-05-29T16:00:00Z'),
+        time: '16:00'
+    },
+    {
+        id: '30',
+        title: 'Core & Flexibility',
+        description: 'Focused workout on core strength and flexibility',
+        type: ActivityTypes.WORKOUT,
+        duration: 45,
+        date: new Date('2025-05-30T18:00:00Z'),
+        time: '18:00'
+    },
+    {
+        id: '31',
+        title: 'Memorial Day HIIT',
+        description: 'Holiday weekend high-intensity circuit training',
+        type: ActivityTypes.HIIT,
+        duration: 35,
+        date: new Date('2025-05-31T10:00:00Z'),
+        time: '10:00'
     }
 ];
 
 // Default user settings
-let userGoal: Goal = {
+let userGoal: Goal | null = {
     userId: 'user_1',
     type: 'count',
     target: 3,
@@ -222,7 +346,6 @@ let userGoal: Goal = {
     weeklyTarget: 21
 };
 
-// Utility functions
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -230,12 +353,11 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const filterActivities = (activities: Activity[], params: GetActivitiesParams) => {
     let filtered = [...activities];
 
-    // Filter by type
-    if (params.type) {
-        filtered = filtered.filter((activity) => activity.type === params.type);
+    if (params.types) {
+        const parsedTypes = params.types.split(',');
+        filtered = filtered.filter((activity) => parsedTypes.includes(activity.type));
     }
 
-    // Filter by date range
     if (params.startDate) {
         const startDate = new Date(params.startDate);
         filtered = filtered.filter((activity) => new Date(activity.date) >= startDate);
@@ -246,7 +368,6 @@ const filterActivities = (activities: Activity[], params: GetActivitiesParams) =
         filtered = filtered.filter((activity) => new Date(activity.date) <= endDate);
     }
 
-    // Search in title and description
     if (params.search) {
         const searchLower = params.search.toLowerCase();
         filtered = filtered.filter(
@@ -274,7 +395,6 @@ const paginateResults = (items: Activity[], page = 1, limit = 10) => {
 };
 
 export const handlers = [
-    // GET /api/activities - Get activities with pagination and filters
     http.get('/mock/activities', async ({ request }) => {
         await delay(500);
 
@@ -283,7 +403,7 @@ export const handlers = [
         const params: GetActivitiesParams = {
             page: parseInt(url.searchParams.get('page') || '1'),
             limit: parseInt(url.searchParams.get('limit') || '10'),
-            type: (url.searchParams.get('type') as ActivityType) || undefined,
+            types: url.searchParams.get('types') || undefined,
 
             startDate: url.searchParams.get('startDate')
                 ? new Date(url.searchParams.get('startDate')!)
@@ -296,10 +416,8 @@ export const handlers = [
             sortOrder: (url.searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc'
         };
 
-        // Apply filters
         const filtered = filterActivities(activities, params);
 
-        // Apply sorting
         filtered.sort((a, b) => {
             const aValue = a[params.sortBy as keyof Activity];
             const bValue = b[params.sortBy as keyof Activity];
@@ -314,7 +432,6 @@ export const handlers = [
             return 0;
         });
 
-        // Apply pagination
         const result = paginateResults(filtered, params.page, params.limit);
 
         const response: GetActivitiesResponse = {
@@ -328,7 +445,6 @@ export const handlers = [
         return HttpResponse.json(response);
     }),
 
-    // GET /api/activities/:id - Get single activity
     http.get('/mock/activities/:id', async ({ params }) => {
         await delay(200);
 
@@ -345,13 +461,11 @@ export const handlers = [
         return HttpResponse.json(activity);
     }),
 
-    // POST /api/activities - Create new activity
     http.post('/mock/activities', async ({ request }) => {
         await delay(300);
 
         const body = (await request.json()) as CreateActivityParams;
 
-        // Validate required fields
         if (!body.title || !body.type) {
             return new HttpResponse(
                 JSON.stringify({
@@ -376,7 +490,6 @@ export const handlers = [
         return HttpResponse.json(newActivity, { status: 201 });
     }),
 
-    // PUT /api/activities/:id - Update activity (full update)
     http.put('/mock/activities/:id', async ({ params, request }) => {
         await delay(300);
 
@@ -404,7 +517,6 @@ export const handlers = [
         return HttpResponse.json(updatedActivity);
     }),
 
-    // PATCH /api/activities/:id - Partial update activity
     http.patch('/mock/activities/:id', async ({ params, request }) => {
         await delay(300);
 
@@ -432,7 +544,6 @@ export const handlers = [
         return HttpResponse.json(updatedActivity);
     }),
 
-    // DELETE /api/activities/:id - Delete activity
     http.delete('/mock/activities/:id', async ({ params }) => {
         await delay(200);
 
@@ -450,7 +561,6 @@ export const handlers = [
         return new HttpResponse(null, { status: 204 });
     }),
 
-    // POST /api/activities/bulk-delete - Bulk delete activities
     http.post('/mock/activities/bulk-delete', async ({ request }) => {
         await delay(400);
 
@@ -475,13 +585,12 @@ export const handlers = [
         });
     }),
 
-    // GET /api/activities/stats - Get activities statistics
     http.get('/mock/activities-stats', async ({ request }) => {
         await delay(600);
 
         const url = new URL(request.url);
         const params: GetActivitiesParams = {
-            type: (url.searchParams.get('type') as ActivityType) || undefined,
+            types: (url.searchParams.get('type') as ActivityType) || undefined,
             startDate: url.searchParams.get('startDate')
                 ? new Date(url.searchParams.get('startDate')!)
                 : undefined,
@@ -490,17 +599,14 @@ export const handlers = [
                 : undefined
         };
 
-        // Apply filters for stats
         const filtered = filterActivities(activities, params);
 
-        console.log('filterd', filtered);
-
-        // Calculate statistics
         const totalActivities = filtered.length;
         const totalDuration = filtered.reduce((sum, activity) => sum + +activity.duration, 0);
-        const averageDuration = totalActivities > 0 ? totalDuration / totalActivities : 0;
+        const averageDuration = (totalActivities > 0 ? totalDuration / totalActivities : 0).toFixed(
+            2
+        );
 
-        // Activities by type
         const activitiesByType = filtered.reduce(
             (acc, activity) => {
                 acc[activity.type] = (acc[activity.type] || 0) + 1;
@@ -509,7 +615,6 @@ export const handlers = [
             {} as Record<string, number>
         );
 
-        // Activities by date (YYYY-MM-DD format)
         const activitiesByDate = filtered.reduce(
             (acc, activity) => {
                 const dateKey = (
@@ -530,22 +635,24 @@ export const handlers = [
         });
     }),
 
-    // ============== USER SETTINGS ENDPOINTS ==============
-
-    // GET /api/user-settings - Get user settings
     http.get('/mock/goals/:userId', async () => {
         await delay(300);
+
+        if (!userGoal) {
+            return new HttpResponse(
+                JSON.stringify({ message: 'Goal not found', code: 'GOAL_NOT_FOUND' }),
+                { status: 404, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
 
         return HttpResponse.json(userGoal);
     }),
 
-    // POST /api/user-settings - Create/Update user settings
-    http.post('/mock/user-settings', async ({ request }) => {
+    http.post('/mock/goals', async ({ request }) => {
         await delay(400);
 
         const body = (await request.json()) as CreateGoalParams;
 
-        // Validate required fields
         if (!body.type || !body.target || !body.frequency) {
             return new HttpResponse(
                 JSON.stringify({
@@ -556,7 +663,6 @@ export const handlers = [
             );
         }
 
-        // Validate goal values
         if (body.target <= 0) {
             return new HttpResponse(
                 JSON.stringify({
@@ -567,25 +673,21 @@ export const handlers = [
             );
         }
 
-        // Update user settings
         userGoal = {
-            ...userGoal,
             type: body.type,
             target: body.target,
             frequency: body.frequency,
-            weeklyTarget: body.weeklyTarget ?? userGoal.weeklyTarget
+            weeklyTarget: body.weeklyTarget
         };
 
         return HttpResponse.json(userGoal);
     }),
 
-    // PATCH /api/user-settings - Partially update user settings
     http.patch('/mock/goals/:userId', async ({ request }) => {
         await delay(300);
 
         const body = (await request.json()) as UpdateGoalParams;
 
-        // Validate goal value if provided
         if (body.target !== undefined && body.target <= 0) {
             return new HttpResponse(
                 JSON.stringify({
@@ -596,40 +698,23 @@ export const handlers = [
             );
         }
 
-        // Update user settings with only provided fields
         userGoal = {
-            ...userGoal,
-            ...body
+            ...body,
+            type: body.type ?? userGoal?.type ?? 'duration',
+            target: body.target ?? userGoal?.target ?? 0,
+            frequency: body.frequency ?? userGoal?.frequency ?? 'daily'
         };
 
         return HttpResponse.json(userGoal);
     }),
 
-    // Simulate server errors occasionally for testing
-    http.get('/mock/activities/error-test', async () => {
-        await delay(1000);
+    http.delete('/mock/goals/:id', async ({ params }) => {
+        await delay(200);
 
-        // Randomly return different types of errors
-        const errorType = Math.random();
-
-        if (errorType < 0.3) {
-            return new HttpResponse(
-                JSON.stringify({ message: 'Internal server error', code: 'INTERNAL_ERROR' }),
-                { status: 500, headers: { 'Content-Type': 'application/json' } }
-            );
-        } else if (errorType < 0.6) {
-            return new HttpResponse(
-                JSON.stringify({
-                    message: 'Service temporarily unavailable',
-                    code: 'SERVICE_UNAVAILABLE'
-                }),
-                { status: 503, headers: { 'Content-Type': 'application/json' } }
-            );
-        } else {
-            return new HttpResponse(
-                JSON.stringify({ message: 'Rate limit exceeded', code: 'RATE_LIMIT' }),
-                { status: 429, headers: { 'Content-Type': 'application/json' } }
-            );
+        const { id } = params;
+        if (userGoal?.id === id) {
+            userGoal = null;
         }
+        return new HttpResponse(null, { status: 204 });
     })
 ];

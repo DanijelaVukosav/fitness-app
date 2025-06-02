@@ -1,4 +1,3 @@
-// pages/ActivitiesPage.tsx
 import React from 'react';
 import { AddActivityModal } from '@/pages/Activities/components/AddActivityModal.tsx';
 import { DeleteConfirmationDialog } from '@/pages/Activities/components/DeleteConfirmationDialog.tsx';

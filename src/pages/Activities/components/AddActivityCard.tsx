@@ -1,4 +1,3 @@
-// components/AddActivityCard.tsx
 import React from 'react';
 import { Box, Card, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
@@ -49,7 +48,6 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                     }
                 }
             }}>
-            {/* Animated glow effect */}
             <Box
                 className="glow-effect"
                 sx={{
@@ -68,7 +66,6 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                 }}
             />
 
-            {/* Plus icon */}
             <Box
                 sx={{
                     position: 'relative',
@@ -86,7 +83,6 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                 />
             </Box>
 
-            {/* Text */}
             <Box
                 sx={{
                     position: 'relative',
@@ -117,7 +113,6 @@ export const AddActivityCard: React.FC<AddActivityCardProps> = ({ onClick }) => 
                 </Typography>
             </Box>
 
-            {/* Floating particles effect */}
             {[...Array(6)].map((_, i) => (
                 <Box
                     key={i}

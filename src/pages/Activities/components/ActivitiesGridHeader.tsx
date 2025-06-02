@@ -1,30 +1,21 @@
-// components/ActivitiesGrid.tsx (Updated)
 import { Box, Typography } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useActivities } from '@/pages/Activities/hooks/useActivities.ts';
 import { useActivitiesContext } from '@/pages/Activities/services/ActivitiesContext.tsx';
 import { PrimaryButton } from '@/common/components/PrimaryButton.tsx';
+import { type FC } from 'react';
 
 interface ActivitiesGridProps {
     currentPage?: number;
-    onAddActivity?: () => void; // New prop for handling add activity click
+    onAddActivity?: () => void;
 }
 
-export const ActivitiesGridHeader: React.FC<ActivitiesGridProps> = ({
+export const ActivitiesGridHeader: FC<ActivitiesGridProps> = ({
     currentPage = 1,
     onAddActivity
 }) => {
     const { filters } = useActivitiesContext();
     const { data } = useActivities(filters);
-
-    const handleAddActivity = () => {
-        if (onAddActivity) {
-            onAddActivity();
-        } else {
-            // Default behavior - you can customize this
-            console.log('Add new fitness activity');
-        }
-    };
 
     return (
         <Box
@@ -36,16 +27,12 @@ export const ActivitiesGridHeader: React.FC<ActivitiesGridProps> = ({
                 gap: 2,
                 py: 3
             }}>
-            {/* Add Activity Button - Left Side */}
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <PrimaryButton
-                    onClick={handleAddActivity}
-                    label="Add Activity"
-                    icon={<AddIcon />}
-                />
+                <PrimaryButton onClick={onAddActivity} startIcon={<AddIcon />} sx={{ paddingX: 3 }}>
+                    Add Activity
+                </PrimaryButton>
             </Box>
 
-            {/* Pagination Info - Right Side */}
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography
                     variant="body2"

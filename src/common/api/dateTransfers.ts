@@ -74,11 +74,10 @@ export function deserializeDate<
         const deserialized: Record<string, unknown> = {};
         Object.entries(obj).forEach(([key, value]) => {
             if (dateFields.includes(key as TDateFields) && typeof value === 'string') {
-                // Validate ISO date string before parsing
                 if (isValidISODateString(value)) {
                     deserialized[key] = new Date(value);
                 } else {
-                    deserialized[key] = value; // Keep original value if not valid date
+                    deserialized[key] = value;
                 }
             } else if (value !== null && typeof value === 'object') {
                 deserialized[key] = deserializeDate(value as Record<string, unknown>, dateFields);
@@ -93,13 +92,11 @@ export function deserializeDate<
 }
 
 function isValidISODateString(value: string): boolean {
-    // Check if it matches ISO 8601 format
     const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?$/;
     if (!isoDateRegex.test(value)) {
         return false;
     }
 
-    // Check if it's a valid date
     const date = new Date(value);
     return !isNaN(date.getTime()) && date.toISOString().startsWith(value.substring(0, 19));
 }

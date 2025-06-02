@@ -2,7 +2,7 @@ import { type FC } from 'react';
 import { GoalProvider } from '@/pages/Goals/services/GoalContext.tsx';
 import { GoalsContainer } from '@/pages/Goals/components/GoalsContainer.tsx';
 
-const UserSettingsPage: FC = () => {
+const UserGoalsPage: FC = () => {
     return (
         <GoalProvider>
             <GoalsContainer />
@@ -10,4 +10,4 @@ const UserSettingsPage: FC = () => {
     );
 };
 
-export default UserSettingsPage;
+export default UserGoalsPage;

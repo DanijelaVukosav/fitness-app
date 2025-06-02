@@ -1,43 +1,47 @@
 import { Box, Fade, Typography } from '@mui/material';
 import { useActivitiesStats } from '@/pages/Activities/hooks/useActivities.ts';
+import { useMemo } from 'react';
 
 export const ActivitiesStats = () => {
     const { data: stats, isLoading } = useActivitiesStats();
 
-    const statsData = [
-        {
-            label: 'Total Activities',
-            value: isLoading ? '—' : (stats?.totalActivities ?? 0),
-            unit: '',
-            gradient: 'linear-gradient(135deg, #0029e3 0%, #740ae1 100%)',
-            accentColor: '#667eea',
-            icon: '🎯'
-        },
-        {
-            label: 'Hours Trained',
-            value: isLoading ? '—' : Math.round(((stats?.totalDuration ?? 0) / 60) * 10) / 10,
-            unit: 'hrs',
-            gradient: 'linear-gradient(135deg, #e400ff 0%, #ff0022 100%)',
-            accentColor: '#f093fb',
-            icon: '⚡'
-        },
-        {
-            label: 'Avg Duration',
-            value: isLoading ? '—' : (stats?.averageDuration ?? 0),
-            unit: 'min',
-            gradient: 'linear-gradient(135deg, #007fee 0%, #00a3fe 100%)',
-            accentColor: '#4facfe',
-            icon: '⏰'
-        },
-        {
-            label: 'Activity Types',
-            value: isLoading ? '—' : Object.keys(stats?.activitiesByType ?? {}).length,
-            unit: '',
-            gradient: 'linear-gradient(135deg, #00c826 0%, #00bb78 100%)',
-            accentColor: '#197c3a',
-            icon: '🏃'
-        }
-    ];
+    const statsData = useMemo(
+        () => [
+            {
+                label: 'Total Activities',
+                value: isLoading ? '—' : (stats?.totalActivities ?? 0),
+                unit: '',
+                gradient: 'linear-gradient(135deg, #0029e3 0%, #740ae1 100%)',
+                accentColor: '#667eea',
+                icon: '🎯'
+            },
+            {
+                label: 'Hours Trained',
+                value: isLoading ? '—' : Math.round(((stats?.totalDuration ?? 0) / 60) * 10) / 10,
+                unit: 'hrs',
+                gradient: 'linear-gradient(135deg, #e400ff 0%, #ff0022 100%)',
+                accentColor: '#f093fb',
+                icon: '⚡'
+            },
+            {
+                label: 'Avg Duration',
+                value: isLoading ? '—' : (stats?.averageDuration ?? 0),
+                unit: 'min',
+                gradient: 'linear-gradient(135deg, #007fee 0%, #00a3fe 100%)',
+                accentColor: '#4facfe',
+                icon: '⏰'
+            },
+            {
+                label: 'Activity Types',
+                value: isLoading ? '—' : Object.keys(stats?.activitiesByType ?? {}).length,
+                unit: '',
+                gradient: 'linear-gradient(135deg, #00c826 0%, #00bb78 100%)',
+                accentColor: '#197c3a',
+                icon: '🏃'
+            }
+        ],
+        [isLoading, stats]
+    );
 
     return (
         <Box
@@ -46,7 +50,6 @@ export const ActivitiesStats = () => {
                 position: 'relative',
                 px: { xs: 2, sm: 0 }
             }}>
-            {/* Desktop background glow */}
             <Box
                 sx={{
                     display: { xs: 'none', md: 'block' },
@@ -72,9 +75,9 @@ export const ActivitiesStats = () => {
                     sx={{
                         display: 'grid',
                         gridTemplateColumns: {
-                            xs: 'repeat(2, 1fr)', // Mobile: 2x2 grid
-                            sm: 'repeat(2, 1fr)', // Small: 2x2 grid
-                            md: 'repeat(4, 1fr)' // Desktop: 1x4 grid
+                            xs: 'repeat(2, 1fr)',
+                            sm: 'repeat(2, 1fr)',
+                            md: 'repeat(4, 1fr)'
                         },
                         gap: { xs: 1.5, sm: 2, md: 3 },
                         position: 'relative',
@@ -88,7 +91,6 @@ export const ActivitiesStats = () => {
                                     height: { xs: '120px', sm: '140px', md: '160px' },
                                     cursor: { xs: 'default', md: 'pointer' },
                                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    // Desktop hover effects
                                     '@media (hover: hover)': {
                                         '&:hover': {
                                             transform: 'translateY(-2px)',
@@ -109,7 +111,6 @@ export const ActivitiesStats = () => {
                                             }
                                         }
                                     },
-                                    // Mobile tap effect with highlight
                                     '@media (hover: none)': {
                                         '&:active': {
                                             transform: 'scale(0.98)',
@@ -127,7 +128,6 @@ export const ActivitiesStats = () => {
                                         }
                                     }
                                 }}>
-                                {/* Mobile highlight glow */}
                                 <Box
                                     className="mobile-highlight"
                                     sx={{
@@ -143,7 +143,6 @@ export const ActivitiesStats = () => {
                                     }}
                                 />
 
-                                {/* Subtle accent glow - only on desktop */}
                                 <Box
                                     className="accent-glow"
                                     sx={{
@@ -159,7 +158,6 @@ export const ActivitiesStats = () => {
                                     }}
                                 />
 
-                                {/* Main card */}
                                 <Box
                                     className="stat-card"
                                     sx={{
@@ -175,7 +173,6 @@ export const ActivitiesStats = () => {
                                         position: 'relative',
                                         overflow: 'hidden',
                                         transition: 'all 0.3s ease',
-                                        // Shimmer effect only on desktop hover
                                         '&::before': {
                                             content: '""',
                                             position: 'absolute',
@@ -194,7 +191,6 @@ export const ActivitiesStats = () => {
                                             }
                                         }
                                     }}>
-                                    {/* Icon with subtle animation */}
                                     <Box
                                         className="floating-icon"
                                         sx={{
@@ -213,7 +209,6 @@ export const ActivitiesStats = () => {
                                         {stat.icon}
                                     </Box>
 
-                                    {/* Value with responsive sizing */}
                                     <Typography
                                         className="value-text"
                                         sx={{
@@ -254,7 +249,6 @@ export const ActivitiesStats = () => {
                                         )}
                                     </Typography>
 
-                                    {/* Label with responsive typography */}
                                     <Typography
                                         sx={{
                                             fontSize: {
@@ -273,7 +267,6 @@ export const ActivitiesStats = () => {
                                         {stat.label}
                                     </Typography>
 
-                                    {/* Mobile-friendly accent line */}
                                     <Box
                                         sx={{
                                             position: 'absolute',
@@ -294,7 +287,6 @@ export const ActivitiesStats = () => {
                 </Box>
             </Fade>
 
-            {/* Desktop decorative element */}
             <Box
                 sx={{
                     display: { xs: 'none', lg: 'block' },

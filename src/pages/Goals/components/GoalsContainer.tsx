@@ -3,7 +3,6 @@ import {
     alpha,
     Avatar,
     Box,
-    Button,
     Divider,
     Paper,
     Stack,
@@ -26,6 +25,7 @@ import { CalendarComponent } from '@/pages/Goals/components/CalendarComponent.ts
 import { PageContainer } from '@/common/components/PageContainer.tsx';
 import { GoalHero } from '@/pages/Goals/components/GoalsHero.tsx';
 import { PrimaryButton } from '@/common/components/PrimaryButton.tsx';
+import { SecondaryButton } from '@/common/components/SecondaryButton.tsx';
 
 export const GoalsContainer: React.FC = () => {
     const { goal, openModal, openDeleteModal } = useUserGoalManager();
@@ -243,49 +243,27 @@ export const GoalsContainer: React.FC = () => {
                                     </Box>
                                 )}
 
-                                {/* Action Button */}
                                 <Box
                                     sx={{
-                                        p: isMobile ? 2 : isTablet ? 3 : 4,
-                                        flex: isMobile || isTablet ? '0 0 auto' : 'auto',
+                                        p: { xs: 2, sm: 3, md: 4 },
                                         display: 'flex',
-                                        flexDirection: isMobile || isTablet ? 'column' : 'row',
-                                        gap: 2
+                                        flexDirection: 'column',
+                                        gap: { xs: 2, md: 3 },
+                                        alignItems: { xs: 'stretch', md: 'center' },
+                                        justifyContent: 'center'
                                     }}>
                                     <PrimaryButton
                                         onClick={() => openModal()}
-                                        label={goal ? 'Edit Goal' : 'Create Goal'}
-                                        icon={goal ? <Edit /> : <AutoAwesome />}
-                                    />
+                                        startIcon={goal ? <Edit /> : <AutoAwesome />}>
+                                        {goal ? 'Edit Goal' : 'Create Goal'}
+                                    </PrimaryButton>
 
                                     {goal && (
-                                        <Button
-                                            variant="contained"
-                                            fullWidth={!isMobile && !isTablet}
-                                            size={isMobile ? 'medium' : 'large'}
+                                        <SecondaryButton
                                             startIcon={<Delete />}
-                                            onClick={() => openDeleteModal()}
-                                            sx={{
-                                                background:
-                                                    'linear-gradient(135deg, #ea0000 0%, #881515 100%)',
-                                                borderRadius: 3,
-                                                py: isMobile ? 1 : 1.5,
-                                                px: isMobile || isTablet ? 3 : 'auto',
-                                                fontSize: isMobile ? '0.875rem' : '1rem',
-                                                fontWeight: 600,
-                                                boxShadow: `0 8px 32px ${alpha('#6366f1', 0.2)}`,
-                                                textTransform: 'none',
-                                                whiteSpace: 'nowrap',
-                                                '&:hover': {
-                                                    background:
-                                                        'linear-gradient(135deg, #ef0000 0%, #801111 100%)',
-                                                    transform: 'translateY(-2px)',
-                                                    boxShadow: `0 12px 48px ${alpha('#6366f1', 0.3)}`
-                                                },
-                                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                                            }}>
-                                            Reset
-                                        </Button>
+                                            onClick={() => openDeleteModal()}>
+                                            Reset Goal
+                                        </SecondaryButton>
                                     )}
                                 </Box>
                             </Box>

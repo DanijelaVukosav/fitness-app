@@ -2,7 +2,6 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
     Box,
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -22,6 +21,8 @@ import { Close, Repeat, RocketLaunch, Save, Timer, TrendingUp } from '@mui/icons
 import { type Goal, USER_ID } from '@/pages/Goals/services/goal.ts';
 import Grid from '@mui/material/Grid';
 import { ModalHeader } from '@/common/components/ModalHeader.tsx';
+import { PrimaryButton } from '@/common/components/PrimaryButton.tsx';
+import { SecondaryButton } from '@/common/components/SecondaryButton.tsx';
 
 interface GoalDialogProps {
     open: boolean;
@@ -345,43 +346,31 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
                         gap: 2,
                         flexDirection: isMobile ? 'column-reverse' : 'row'
                     }}>
-                    <Button
-                        onClick={handleClose}
+                    <SecondaryButton
                         variant="outlined"
-                        fullWidth={isMobile}
+                        onClick={handleClose}
+                        disabled={isSubmitting}
                         sx={{
-                            borderRadius: 2,
-                            minWidth: isMobile ? 'auto' : 120,
-                            borderColor: '#e2e8f0',
-                            color: '#64748b',
-                            '&:hover': {
-                                borderColor: '#cbd5e1',
-                                backgroundColor: '#f8fafc'
-                            }
-                        }}
-                        disabled={isSubmitting}>
+                            flex: 1,
+                            py: 1.5,
+                            fontWeight: 700
+                        }}>
                         Cancel
-                    </Button>
-                    <Button
+                    </SecondaryButton>
+                    <PrimaryButton
                         type="submit"
                         variant="contained"
                         fullWidth={isMobile}
                         startIcon={<Save />}
                         disabled={isSubmitting}
                         sx={{
-                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                            borderRadius: 2,
                             minWidth: isMobile ? 'auto' : 140,
                             py: 1.5,
                             fontWeight: 600,
                             textTransform: 'none',
                             fontSize: '1rem',
-                            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-                            '&:hover': {
-                                background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
-                                boxShadow: '0 8px 25px rgba(102, 126, 234, 0.6)',
-                                transform: 'translateY(-1px)'
-                            },
+                            width: '100%',
+                            maxWidth: '600px',
                             '&:disabled': {
                                 background: '#e2e8f0',
                                 color: '#94a3b8'
@@ -389,7 +378,7 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
                             transition: 'all 0.3s ease'
                         }}>
                         {isSubmitting ? 'Saving...' : !goal ? 'Create Goal' : 'Update Goal'}
-                    </Button>
+                    </PrimaryButton>
                 </DialogActions>
             </form>
         </Dialog>

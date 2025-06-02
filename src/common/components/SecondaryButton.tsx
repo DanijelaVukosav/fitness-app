@@ -1,30 +1,31 @@
-import { styled } from '@mui/system';
 import { Button } from '@mui/material';
+import { styled } from '@mui/system';
 
-export const PrimaryButton = styled(Button)(({ theme }) => ({
+export const SecondaryButton = styled(Button)(({ theme }) => ({
     px: 3,
     py: 1.2,
     fontSize: '1rem',
     fontWeight: 600,
     borderRadius: '50px',
-    background: 'linear-gradient(135deg, #0A78AB 0%, #A020F0 100%)',
-    color: 'white',
-    position: 'relative',
-    overflow: 'hidden',
+    border: 'none',
+    background: 'linear-gradient(135deg, #aeaeae 0%, #e8e8e8 100%)',
+    color: 'rgba(0, 0, 0, 0.7)',
     textTransform: 'none',
-    boxShadow: '0 6px 24px rgba(10, 120, 171, 0.25)',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     minWidth: '140px',
-    maxWidth: '250px',
+    maxWidth: '300px',
     height: '48px',
     [theme.breakpoints.down('md')]: {
         minWidth: '120px',
         fontSize: '0.875rem',
+        px: 2.5,
+        py: 1,
         height: '44px'
     },
     [theme.breakpoints.down('sm')]: {
         minWidth: '100px',
         fontSize: '0.8rem',
+        px: 2,
         height: '40px'
     },
     '&::before': {
@@ -39,7 +40,6 @@ export const PrimaryButton = styled(Button)(({ theme }) => ({
     },
     '&:hover': {
         transform: 'translateY(-2px)',
-        boxShadow: '0 8px 32px rgba(10, 120, 171, 0.35)',
         '&::before': {
             left: '100%'
         }

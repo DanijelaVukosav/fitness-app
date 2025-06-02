@@ -26,7 +26,6 @@ export interface UseActivitiesManagerReturn {
     resetAndCloseDeleteModal: () => void;
     deleteActivity: (activityId: string) => Promise<void>;
 
-    handleActivityClick: (activity: Activity) => void;
     handleEditActivity: (activity: Activity) => void;
     handleDeleteActivity: (activity: Activity) => void;
 
@@ -85,7 +84,6 @@ export const useActivitiesManager = (): UseActivitiesManagerReturn => {
     );
 
     const resetAndCloseModal = useCallback(() => {
-        console.log('set null', selectedEditActivity);
         setEditingActivity(null);
         closeModal();
     }, [closeModal, setEditingActivity]);
@@ -108,10 +106,6 @@ export const useActivitiesManager = (): UseActivitiesManagerReturn => {
         },
         [deleteMutation, enqueueSnackbar, resetAndCloseDeleteModal]
     );
-
-    const handleActivityClick = useCallback((activity: Activity) => {
-        console.log('Activity clicked:', activity);
-    }, []);
 
     const handleEditActivity = useCallback(
         (activity: Activity) => {
@@ -146,7 +140,6 @@ export const useActivitiesManager = (): UseActivitiesManagerReturn => {
         resetAndCloseDeleteModal,
         deleteActivity,
 
-        handleActivityClick,
         handleEditActivity,
         handleDeleteActivity,
 

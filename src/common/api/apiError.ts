@@ -33,33 +33,6 @@ export class ApiError<TData extends ErrorData = ErrorData> extends Error {
 
         Object.setPrototypeOf(this, ApiError.prototype);
     }
-
-    get isClientError(): boolean {
-        return this.status ? this.status >= 400 && this.status < 500 : false;
-    }
-
-    get isServerError(): boolean {
-        return this.status ? this.status >= 500 : false;
-    }
-
-    get isNetworkError(): boolean {
-        return this.status === 0 || this.code === 'NETWORK_ERROR';
-    }
-
-    get validationErrors(): ValidationError[] {
-        return this.data?.validationErrors || [];
-    }
-
-    toJSON(): Record<string, unknown> {
-        return {
-            name: this.name,
-            message: this.message,
-            status: this.status,
-            data: this.data,
-            timestamp: this.timestamp,
-            stack: this.stack
-        };
-    }
 }
 
 export class ValidationApiError extends ApiError<{
@@ -99,24 +72,4 @@ export function isApiError<TData extends ErrorData = ErrorData>(
     error: unknown
 ): error is ApiError<TData> {
     return error instanceof ApiError;
-}
-
-export function isValidationApiError(error: unknown): error is ValidationApiError {
-    return error instanceof ValidationApiError;
-}
-
-export function isNotFoundApiError(error: unknown): error is NotFoundApiError {
-    return error instanceof NotFoundApiError;
-}
-
-export function isUnauthorizedApiError(error: unknown): error is UnauthorizedApiError {
-    return error instanceof UnauthorizedApiError;
-}
-
-export function isForbiddenApiError(error: unknown): error is ForbiddenApiError {
-    return error instanceof ForbiddenApiError;
-}
-
-export function isNetworkApiError(error: unknown): error is NetworkApiError {
-    return error instanceof NetworkApiError;
 }

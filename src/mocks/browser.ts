@@ -2,46 +2,35 @@
 import { setupWorker } from 'msw/browser';
 import { handlers } from './handlers';
 
-// Create the worker instance
 export const worker = setupWorker(...handlers);
 
-// Check if mocking should be enabled
 export const isMockingEnabled = (): boolean => {
-    // Enable mocking in development or when explicitly requested
     return (
         import.meta.env.VITE_ENABLE_MOCKING === 'true' ||
         import.meta.env.VITE_API_URL === 'mock' ||
-        import.meta.env.DEV === true
+        import.meta.env.DEV
     );
 };
 
-// Start the worker with proper configuration
 export const startMocking = async (): Promise<void> => {
     if (typeof window === 'undefined') {
-        // Skip in SSR environments
         return;
     }
 
     try {
         await worker.start({
-            // Only show warnings in development
             onUnhandledRequest: import.meta.env.DEV ? 'warn' : 'bypass',
 
-            // Service worker configuration
             serviceWorker: {
-                // Use the default service worker URL
                 url: '/mockServiceWorker.js',
 
-                // Service worker options
                 options: {
                     scope: '/'
                 }
             },
 
-            // Wait until the service worker is ready
             waitUntilReady: true,
 
-            // Don't log successful requests in production
             quiet: !import.meta.env.DEV
         });
 
@@ -55,7 +44,6 @@ export const startMocking = async (): Promise<void> => {
     }
 };
 
-// Stop mocking (useful for testing or when switching to real API)
 export const stopMocking = (): void => {
     worker.stop();
 
@@ -64,7 +52,6 @@ export const stopMocking = (): void => {
     }
 };
 
-// Reset all handlers to their initial state
 export const resetMocks = (): void => {
     worker.resetHandlers();
 
@@ -73,7 +60,6 @@ export const resetMocks = (): void => {
     }
 };
 
-// Add runtime handlers (useful for testing specific scenarios)
 export const addMockHandlers = (...newHandlers: Parameters<typeof worker.use>) => {
     worker.use(...newHandlers);
 
@@ -82,7 +68,6 @@ export const addMockHandlers = (...newHandlers: Parameters<typeof worker.use>) =
     }
 };
 
-// Restore original handlers (remove runtime handlers)
 export const restoreHandlers = (): void => {
     worker.restoreHandlers();
 
@@ -91,10 +76,21 @@ export const restoreHandlers = (): void => {
     }
 };
 
-// Development utilities
+declare global {
+    interface Window {
+        msw?: {
+            worker: typeof worker;
+            stop: typeof stopMocking;
+            start: typeof startMocking;
+            reset: typeof resetMocks;
+            addHandlers: typeof addMockHandlers;
+            restoreHandlers: typeof restoreHandlers;
+        };
+    }
+}
+
 if (import.meta.env.DEV) {
-    // Make MSW utilities available in the global scope for debugging
-    (window as any).msw = {
+    window.msw = {
         worker,
         stop: stopMocking,
         start: startMocking,
@@ -104,6 +100,5 @@ if (import.meta.env.DEV) {
     };
 }
 
-// Export everything for convenience
 export { handlers };
 export default worker;

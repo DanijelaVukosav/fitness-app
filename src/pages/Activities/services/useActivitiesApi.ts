@@ -1,4 +1,3 @@
-// hooks/useActivitiesApi.ts
 import { useCallback } from 'react';
 import { type Activity } from '@/pages/Activities/services/types.ts';
 import type {

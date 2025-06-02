@@ -34,7 +34,6 @@ export interface CreateActivityParams {
     type: ActivityType;
     duration: number;
     date: Date | string;
-    time?: string;
 }
 
 export interface UpdateActivityParams {
@@ -45,7 +44,6 @@ export interface UpdateActivityParams {
     duration?: number;
     date?: Date;
     completed?: boolean;
-    time?: string;
 }
 
 interface ActivitiesContextState {

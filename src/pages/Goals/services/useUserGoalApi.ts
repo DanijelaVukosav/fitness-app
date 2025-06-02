@@ -1,4 +1,3 @@
-// hooks/useUserGoalApi.ts
 import { useCallback } from 'react';
 import { httpClient } from '@/common/api/httpClinet.ts';
 import type { CreateGoalParams, Goal, UpdateGoalParams } from '@/pages/Goals/services/goal.ts';

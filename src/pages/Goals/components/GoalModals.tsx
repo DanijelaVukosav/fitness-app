@@ -1,10 +1,9 @@
-// pages/ActivitiesPage.tsx
-import React from 'react';
+import React, { type FC } from 'react';
 import { useUserGoalManager } from '@/pages/Goals/hooks/useUserGoalManager.ts';
 import { GoalDeleteModal } from '@/pages/Goals/components/DeleteConfirmationDialog.tsx';
 import { GoalModal } from '@/pages/Goals/components/GoalModal.tsx';
 
-export const UserGoalModals: React.FC = () => {
+export const GoalModals: FC = () => {
     const {
         goal,
         isModalOpen,

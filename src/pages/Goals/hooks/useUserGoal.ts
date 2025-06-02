@@ -13,12 +13,11 @@ export const useUserGoal = (userId: string = USER_ID) => {
     return useQuery({
         queryKey: userGoalKeys.goal(),
         queryFn: () => getUserGoal(userId),
-        staleTime: 10 * 60 * 1000, // 10 minutes
+        staleTime: 10 * 60 * 1000,
         placeholderData: (prev) => prev
     });
 };
 
-// ➕ Create/Update user settings
 export const useCreateUserGoal = () => {
     const queryClient = useQueryClient();
     const { createUserGoal } = useUserGoalApi();
@@ -32,7 +31,6 @@ export const useCreateUserGoal = () => {
     });
 };
 
-// ✏️ Update user settings
 export const useUpdateUserGoal = () => {
     const queryClient = useQueryClient();
     const { updateUserGoal } = useUserGoalApi();
@@ -46,7 +44,6 @@ export const useUpdateUserGoal = () => {
     });
 };
 
-// ↩️ Reset user settings
 export const useResetUserGoal = () => {
     const queryClient = useQueryClient();
     const { resetUserGoal } = useUserGoalApi();
@@ -58,19 +55,4 @@ export const useResetUserGoal = () => {
         },
         onError: (error) => console.error('Failed to reset user settings:', error)
     });
-};
-
-// 🔄 Background sync
-export const useUserGoalSync = () => {
-    const queryClient = useQueryClient();
-
-    const syncGoal = () => {
-        queryClient.invalidateQueries({ queryKey: userGoalKeys.goal() });
-    };
-
-    const syncAll = () => {
-        queryClient.invalidateQueries({ queryKey: userGoalKeys.all });
-    };
-
-    return { syncGoal, syncAll };
 };

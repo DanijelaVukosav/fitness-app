@@ -6,7 +6,7 @@ import {
     useCreateUserGoal,
     useResetUserGoal,
     useUpdateUserGoal
-} from '@/pages/Goals/hooks/useUserSettings.ts';
+} from '@/pages/Goals/hooks/useUserGoal.ts';
 import {
     type CreateGoalParams,
     type Goal,

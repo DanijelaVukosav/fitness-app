@@ -1,9 +1,8 @@
 import React, { createContext, type ReactNode, useCallback, useContext, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Goal } from '@/pages/Goals/services/goal.ts';
-import { userGoalKeys, useUserGoal } from '@/pages/Goals/hooks/useUserSettings.ts';
+import { userGoalKeys, useUserGoal } from '@/pages/Goals/hooks/useUserGoal.ts';
 
-// Context state interface
 interface GoalContextState {
     goal: Goal | undefined;
     isLoading: boolean;
@@ -14,7 +13,6 @@ interface GoalContextState {
     isDeleteModalOpen: boolean;
     setIsDeleteModalOpen: (open: boolean) => void;
 
-    // Utility functions
     invalidateGoal: () => void;
     resetGoalCache: () => void;
 }
@@ -33,12 +31,12 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         () => queryClient.invalidateQueries({ queryKey: userGoalKeys.all }),
         [queryClient]
     );
+
     const resetGoalCache = useCallback(
         () => queryClient.resetQueries({ queryKey: userGoalKeys.all }),
         [queryClient]
     );
 
-    // --------------------------------------------------------------- Context
     const value: GoalContextState = {
         goal,
         isLoading,
@@ -56,7 +54,6 @@ export const GoalProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return <GoalContext.Provider value={value}>{children}</GoalContext.Provider>;
 };
 
-// Hook to use the context
 export const useUserGoalContext = (): GoalContextState => {
     const context = useContext(GoalContext);
 

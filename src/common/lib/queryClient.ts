@@ -1,4 +1,3 @@
-// lib/queryClient.ts
 import { type DefaultOptions, QueryClient } from '@tanstack/react-query';
 import { isApiError } from '@/common/api/apiError.ts';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
     Box,
@@ -17,7 +17,7 @@ import {
     useMediaQuery,
     useTheme
 } from '@mui/material';
-import { Close, Repeat, RocketLaunch, Save, Timer, TrendingUp } from '@mui/icons-material';
+import { Close, RocketLaunch, Save, Timer, TrendingUp } from '@mui/icons-material';
 import { type Goal, USER_ID } from '@/pages/Goals/services/goal.ts';
 import Grid from '@mui/material/Grid';
 import { ModalHeader } from '@/common/components/ModalHeader.tsx';
@@ -34,7 +34,6 @@ interface GoalDialogProps {
 const defaultValues: Goal = {
     userId: USER_ID,
     type: 'count',
-    frequency: 'daily',
     target: 1
 };
 
@@ -54,15 +53,13 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
     });
 
     const watchedType = watch('type');
-    const watchedFrequency = watch('frequency');
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (open) {
             if (goal) {
                 reset({
                     userId: USER_ID,
                     type: goal.type,
-                    frequency: goal.frequency,
                     target: goal.target
                 });
             } else {
@@ -80,14 +77,10 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
         }
     };
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         reset(defaultValues);
         onClose();
-    };
-
-    const getFrequencyIcon = () => {
-        return <Repeat />;
-    };
+    }, [onClose, reset]);
 
     return (
         <Dialog
@@ -157,7 +150,6 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
                     }
                 />
 
-                {/* Content */}
                 <DialogContent
                     sx={{
                         pt: isMobile ? 3 : 4,
@@ -165,7 +157,6 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
                         pb: 2
                     }}>
                     <Stack spacing={isMobile ? 3 : 4}>
-                        {/* Goal Type & Frequency Row */}
                         <Grid container spacing={isMobile ? 2 : 3} paddingTop={isMobile ? 3 : 4}>
                             <Grid size={{ xs: 12, sm: 6 }}>
                                 <Controller
@@ -225,58 +216,6 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
                                     )}
                                 />
                             </Grid>
-
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <Controller
-                                    name="frequency"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <FormControl fullWidth error={!!errors.frequency}>
-                                            <InputLabel
-                                                sx={{
-                                                    '&.Mui-focused': {
-                                                        color: '#667eea'
-                                                    }
-                                                }}>
-                                                Frequency
-                                            </InputLabel>
-                                            <Select
-                                                {...field}
-                                                label="Frequency"
-                                                startAdornment={
-                                                    <Box
-                                                        sx={{
-                                                            mr: 1,
-                                                            display: 'flex',
-                                                            alignItems: 'center'
-                                                        }}>
-                                                        {getFrequencyIcon()}
-                                                    </Box>
-                                                }
-                                                sx={{
-                                                    borderRadius: 2,
-                                                    '& .MuiOutlinedInput-root': {
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline':
-                                                            {
-                                                                borderColor: '#667eea'
-                                                            }
-                                                    }
-                                                }}>
-                                                <MenuItem value="daily">Daily</MenuItem>
-                                                <MenuItem value="weekly">Weekly</MenuItem>
-                                            </Select>
-                                            {errors.frequency && (
-                                                <FormHelperText>
-                                                    {errors.frequency.message}
-                                                </FormHelperText>
-                                            )}
-                                        </FormControl>
-                                    )}
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <Grid container spacing={isMobile ? 2 : 3}>
                             <Grid size={{ xs: 12, sm: 6 }}>
                                 <Controller
                                     name="target"
@@ -318,7 +257,6 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
                             </Grid>
                         </Grid>
 
-                        {/* Preview Section */}
                         <Box
                             sx={{
                                 p: 3,
@@ -331,14 +269,13 @@ export const GoalModal: React.FC<GoalDialogProps> = ({ open, goal, onClose, onSu
                             </Typography>
                             <Typography variant="body1" sx={{ fontWeight: 500 }}>
                                 {watchedType === 'count'
-                                    ? `Complete ${watch('target') || 0} activities ${watchedFrequency}`
-                                    : `Spend ${watch('target') || 0} minutes ${watchedFrequency}`}
+                                    ? `Complete ${watch('target') || 0} activities daily`
+                                    : `Spend ${watch('target') || 0} minutes daily`}
                             </Typography>
                         </Box>
                     </Stack>
                 </DialogContent>
 
-                {/* Actions */}
                 <DialogActions
                     sx={{
                         p: isMobile ? 3 : 4,

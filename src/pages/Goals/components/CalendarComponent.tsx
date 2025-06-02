@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useActivitiesContext } from '@/pages/Activities/services/ActivitiesContext.tsx';
 import { useActivities } from '@/pages/Activities/hooks/useActivities.ts';
 import {
@@ -15,30 +15,49 @@ import { CalendarToday, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import Grid from '@mui/material/Grid';
 import { useUserGoalManager } from '@/pages/Goals/hooks/useUserGoalManager.ts';
 
-export const CalendarComponent = () => {
+const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+];
+
+const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+export const CalendarComponent: FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const { updateFilter } = useActivitiesContext();
     const { goal } = useUserGoalManager();
 
-    // Get start and end of current month for filtering
-    const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const monthStart = useMemo(
+        () => new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+        [currentDate]
+    );
+    const monthEnd = useMemo(
+        () => new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0),
+        [currentDate]
+    );
 
-    // Update activities filter when month changes
     useEffect(() => {
         updateFilter('startDate', monthStart);
         updateFilter('endDate', monthEnd);
         updateFilter('limit', 50);
-    }, [currentDate, updateFilter]);
+    }, [monthEnd, monthStart, updateFilter]);
 
-    // Get activities for current month
     const { data: activitiesData, isLoading } = useActivities({
         startDate: monthStart,
         endDate: monthEnd,
         limit: 500
     });
 
-    // Calculate goal achievement for each day
     const dailyProgress = useMemo(() => {
         if (!activitiesData?.activities || !goal) return {};
 
@@ -55,11 +74,9 @@ export const CalendarComponent = () => {
             progress[date].duration += activity.duration;
         });
 
-        // Check if each day meets the goal
         Object.keys(progress).forEach((date) => {
             const dayData = progress[date];
-            const target =
-                goal.frequency === 'daily' ? goal.target : Math.ceil((goal.weeklyTarget ?? 0) / 7);
+            const target = goal.target;
             const current = goal.type === 'count' ? dayData.count : dayData.duration;
             progress[date].achieved = current >= target;
         });
@@ -67,84 +84,70 @@ export const CalendarComponent = () => {
         return progress;
     }, [activitiesData, goal]);
 
-    const getDaysInMonth = () => {
+    const getDaysInMonth = useCallback(() => {
         return new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-    };
+    }, [currentDate]);
 
-    const getFirstDayOfMonth = () => {
+    const getFirstDayOfMonth = useCallback(() => {
         return new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-    };
+    }, [currentDate]);
 
-    const generateCalendarDays = () => {
+    const generateCalendarDays = useCallback(() => {
         const daysInMonth = getDaysInMonth();
         const firstDay = getFirstDayOfMonth();
         const days = [];
 
-        // Empty cells for days before month starts
         for (let i = 0; i < firstDay; i++) {
             days.push(null);
         }
 
-        // Days of the month
         for (let day = 1; day <= daysInMonth; day++) {
             days.push(day);
         }
 
         return days;
-    };
+    }, [getDaysInMonth, getFirstDayOfMonth]);
 
-    const navigateMonth = (direction: number) => {
+    const navigateMonth = useCallback((direction: number) => {
         setCurrentDate((prev) => {
             const newDate = new Date(prev);
             newDate.setMonth(prev.getMonth() + direction);
             return newDate;
         });
-    };
+    }, []);
 
-    const getDayStatus = (day: number | null) => {
-        if (!day) return null;
+    const getDayStatus = useCallback(
+        (day: number | null) => {
+            if (!day) return null;
 
-        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        const dateString = date.toDateString();
-        const dayData = dailyProgress[dateString];
+            const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+            const dateString = date.toDateString();
+            const dayData = dailyProgress[dateString];
 
-        if (!dayData) return 'none';
-        return dayData.achieved ? 'success' : 'partial';
-    };
+            if (!dayData) return 'none';
+            return dayData.achieved ? 'success' : 'partial';
+        },
+        [currentDate, dailyProgress]
+    );
 
-    const getDayTooltip = (day: number | null) => {
-        if (!day || !goal) return '';
+    const getDayTooltip = useCallback(
+        (day: number | null) => {
+            if (!day || !goal) return '';
 
-        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        const dateString = date.toDateString();
-        const dayData = dailyProgress[dateString];
+            const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+            const dateString = date.toDateString();
+            const dayData = dailyProgress[dateString];
 
-        if (!dayData) return 'No activities';
+            if (!dayData) return 'No activities';
 
-        const target =
-            goal.frequency === 'daily' ? goal.target : Math.ceil((goal.weeklyTarget ?? 0) / 7);
-        const current = goal.type === 'count' ? dayData.count : dayData.duration;
-        const unit = goal.type === 'count' ? 'activities' : 'minutes';
+            const target = goal.target;
+            const current = goal.type === 'count' ? dayData.count : dayData.duration;
+            const unit = goal.type === 'count' ? 'activities' : 'minutes';
 
-        return `${current}/${target} ${unit} - ${dayData.achieved ? 'Goal achieved!' : 'Goal not met'}`;
-    };
-
-    const monthNames = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-    ];
-
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            return `${current}/${target} ${unit} - ${dayData.achieved ? 'Goal achieved!' : 'Goal not met'}`;
+        },
+        [currentDate, dailyProgress, goal]
+    );
 
     return (
         <Card
@@ -163,7 +166,6 @@ export const CalendarComponent = () => {
                     {isLoading && <CircularProgress size={24} />}
                 </Box>
 
-                {/* Calendar Header */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -182,7 +184,6 @@ export const CalendarComponent = () => {
                     </IconButton>
                 </Box>
 
-                {/* Day names */}
                 <Grid container spacing={1} sx={{ mb: 1 }}>
                     {dayNames.map((day) => (
                         <Grid key={day} size={{ xs: 12 / 7 }}>
@@ -196,7 +197,6 @@ export const CalendarComponent = () => {
                     ))}
                 </Grid>
 
-                {/* Calendar Grid */}
                 <Grid container spacing={1}>
                     {generateCalendarDays().map((day, index) => {
                         const status = getDayStatus(day);
@@ -254,7 +254,6 @@ export const CalendarComponent = () => {
                     })}
                 </Grid>
 
-                {/* Legend */}
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, mt: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Box

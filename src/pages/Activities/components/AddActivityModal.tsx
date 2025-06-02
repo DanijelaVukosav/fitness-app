@@ -139,8 +139,7 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                 description: data.description,
                 type: data.type,
                 duration: data.duration,
-                date: activityDateTime,
-                time: data.time
+                date: activityDateTime
             };
 
             onSubmit(newActivity);

@@ -1,15 +1,15 @@
-// pages/ActivitiesPage.tsx
-import React from 'react';
+import React, { type FC, useCallback } from 'react';
 import { Box, Button } from '@mui/material';
 import { PageHero } from '@/common/components/PageHero.tsx';
 import { useNavigate } from 'react-router-dom';
 import { APPLICATION_ROUTES } from '@/common/router/types.ts';
 
-export const GoalHero: React.FC = () => {
+export const GoalHero: FC = () => {
     const navigate = useNavigate();
-    const handleActivitiesRedirect = () => {
+
+    const handleActivitiesRedirect = useCallback(() => {
         navigate(APPLICATION_ROUTES.ACTIVITIES);
-    };
+    }, [navigate]);
 
     return (
         <PageHero

@@ -24,7 +24,10 @@ export interface Activity {
     title: string;
     description: string;
     date: Date | string;
-    time?: string;
     type: ActivityType;
     duration: number;
+}
+
+export interface CreateActivity extends Activity {
+    time?: string;
 }

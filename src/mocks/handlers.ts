@@ -1,4 +1,3 @@
-// mocks/handlers.ts
 import { http, HttpResponse } from 'msw';
 import {
     type Activity,
@@ -12,49 +11,6 @@ import type {
 } from '@/pages/Activities/services/ActivitiesContext.tsx';
 import type { CreateGoalParams, Goal, UpdateGoalParams } from '@/pages/Goals/services/goal.ts';
 
-// User Settings Types
-export interface UserSettings {
-    id: string;
-    goalType: 'count' | 'duration';
-    goalValue: number;
-    goalFrequency: 'daily' | 'weekly';
-    weeklyTarget: number;
-    notifications: boolean;
-    reminderTime: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-export interface CreateUserSettingsParams {
-    goalType: 'count' | 'duration';
-    goalValue: number;
-    goalFrequency: 'daily' | 'weekly';
-    weeklyTarget?: number;
-    notifications?: boolean;
-    reminderTime?: string;
-}
-
-export type UpdateUserSettingsParams = Partial<CreateUserSettingsParams>;
-
-export interface GoalProgress {
-    date: string;
-    achieved: boolean;
-    activityCount: number;
-    totalDuration: number;
-    targetValue: number;
-    targetType: 'count' | 'duration';
-}
-
-export interface WeeklyProgress {
-    weekStart: string;
-    weekEnd: string;
-    achieved: boolean;
-    totalCount: number;
-    totalDuration: number;
-    targetValue: number;
-    targetType: 'count' | 'duration';
-    dailyProgress: GoalProgress[];
-}
 let activities: Activity[] = [
     {
         id: '1',
@@ -62,8 +18,7 @@ let activities: Activity[] = [
         description: 'Early morning 5K run through the forest trail',
         type: ActivityTypes.RUN,
         duration: 35,
-        date: new Date('2025-05-01T06:00:00Z'),
-        time: '06:00'
+        date: new Date('2025-05-01T06:00:00Z')
     },
     {
         id: '2',
@@ -71,8 +26,7 @@ let activities: Activity[] = [
         description: 'Leisurely walk downtown with coffee stop',
         type: ActivityTypes.WALK,
         duration: 50,
-        date: new Date('2025-05-02T09:30:00Z'),
-        time: '09:30'
+        date: new Date('2025-05-02T09:30:00Z')
     },
     {
         id: '3',
@@ -80,8 +34,7 @@ let activities: Activity[] = [
         description: 'Challenging hike up Eagle Peak with scenic views',
         type: ActivityTypes.HIKE,
         duration: 120,
-        date: new Date('2025-05-03T07:00:00Z'),
-        time: '07:00'
+        date: new Date('2025-05-03T07:00:00Z')
     },
     {
         id: '4',
@@ -89,8 +42,7 @@ let activities: Activity[] = [
         description: 'Peaceful bike ride along the lakefront path',
         type: ActivityTypes.RIDE,
         duration: 45,
-        date: new Date('2025-05-04T18:00:00Z'),
-        time: '18:00'
+        date: new Date('2025-05-04T18:00:00Z')
     },
     {
         id: '5',
@@ -98,8 +50,7 @@ let activities: Activity[] = [
         description: 'Lap swimming session at the community pool',
         type: ActivityTypes.SWIM,
         duration: 40,
-        date: new Date('2025-05-05T17:30:00Z'),
-        time: '17:30'
+        date: new Date('2025-05-05T17:30:00Z')
     },
     {
         id: '6',
@@ -107,8 +58,7 @@ let activities: Activity[] = [
         description: 'Strength training session focusing on compound movements',
         type: ActivityTypes.WORKOUT,
         duration: 60,
-        date: new Date('2025-05-06T16:00:00Z'),
-        time: '16:00'
+        date: new Date('2025-05-06T16:00:00Z')
     },
     {
         id: '7',
@@ -116,8 +66,7 @@ let activities: Activity[] = [
         description: 'High-intensity interval training with burpees and sprints',
         type: ActivityTypes.HIIT,
         duration: 25,
-        date: new Date('2025-05-07T07:15:00Z'),
-        time: '07:15'
+        date: new Date('2025-05-07T07:15:00Z')
     },
     {
         id: '8',
@@ -125,8 +74,7 @@ let activities: Activity[] = [
         description: 'Relaxing yoga session followed by mindfulness meditation',
         type: ActivityTypes.OTHER,
         duration: 75,
-        date: new Date('2025-05-08T19:00:00Z'),
-        time: '19:00'
+        date: new Date('2025-05-08T19:00:00Z')
     },
     {
         id: '9',
@@ -134,8 +82,7 @@ let activities: Activity[] = [
         description: 'Speed work with 400m intervals at the track',
         type: ActivityTypes.RUN,
         duration: 45,
-        date: new Date('2025-05-09T06:30:00Z'),
-        time: '06:30'
+        date: new Date('2025-05-09T06:30:00Z')
     },
     {
         id: '10',
@@ -143,8 +90,7 @@ let activities: Activity[] = [
         description: 'Mindful walk through the botanical gardens',
         type: ActivityTypes.WALK,
         duration: 35,
-        date: new Date('2025-05-10T15:00:00Z'),
-        time: '15:00'
+        date: new Date('2025-05-10T15:00:00Z')
     },
     {
         id: '11',
@@ -152,8 +98,7 @@ let activities: Activity[] = [
         description: 'Scenic cliff-side hike with ocean views',
         type: ActivityTypes.HIKE,
         duration: 90,
-        date: new Date('2025-05-11T08:00:00Z'),
-        time: '08:00'
+        date: new Date('2025-05-11T08:00:00Z')
     },
     {
         id: '12',
@@ -161,8 +106,7 @@ let activities: Activity[] = [
         description: 'Technical trail riding through pine forests',
         type: ActivityTypes.RIDE,
         duration: 75,
-        date: new Date('2025-05-12T14:00:00Z'),
-        time: '14:00'
+        date: new Date('2025-05-12T14:00:00Z')
     },
     {
         id: '13',
@@ -170,8 +114,7 @@ let activities: Activity[] = [
         description: 'Swimming session at the lake with breathwork',
         type: ActivityTypes.SWIM,
         duration: 50,
-        date: new Date('2025-05-13T16:30:00Z'),
-        time: '16:30'
+        date: new Date('2025-05-13T16:30:00Z')
     },
     {
         id: '14',
@@ -179,8 +122,7 @@ let activities: Activity[] = [
         description: 'Gym session targeting chest, shoulders, and arms',
         type: ActivityTypes.WORKOUT,
         duration: 55,
-        date: new Date('2025-05-14T17:00:00Z'),
-        time: '17:00'
+        date: new Date('2025-05-14T17:00:00Z')
     },
     {
         id: '15',
@@ -188,8 +130,7 @@ let activities: Activity[] = [
         description: '20-second max effort intervals with 10-second rest',
         type: ActivityTypes.HIIT,
         duration: 20,
-        date: new Date('2025-05-15T12:00:00Z'),
-        time: '12:00'
+        date: new Date('2025-05-15T12:00:00Z')
     },
     {
         id: '16',
@@ -197,8 +138,7 @@ let activities: Activity[] = [
         description: 'Indoor bouldering session at the climbing gym',
         type: ActivityTypes.OTHER,
         duration: 90,
-        date: new Date('2025-05-16T18:30:00Z'),
-        time: '18:30'
+        date: new Date('2025-05-16T18:30:00Z')
     },
     {
         id: '17',
@@ -206,8 +146,7 @@ let activities: Activity[] = [
         description: '10K training run preparing for upcoming race',
         type: ActivityTypes.RUN,
         duration: 55,
-        date: new Date('2025-05-17T06:00:00Z'),
-        time: '06:00'
+        date: new Date('2025-05-17T06:00:00Z')
     },
     {
         id: '18',
@@ -215,8 +154,7 @@ let activities: Activity[] = [
         description: 'Relaxed walk with the dog at the local park',
         type: ActivityTypes.WALK,
         duration: 40,
-        date: new Date('2025-05-18T10:00:00Z'),
-        time: '10:00'
+        date: new Date('2025-05-18T10:00:00Z')
     },
     {
         id: '19',
@@ -224,8 +162,7 @@ let activities: Activity[] = [
         description: 'Adventure hike to hidden waterfall with photography',
         type: ActivityTypes.HIKE,
         duration: 110,
-        date: new Date('2025-05-19T07:30:00Z'),
-        time: '07:30'
+        date: new Date('2025-05-19T07:30:00Z')
     },
     {
         id: '20',
@@ -233,8 +170,7 @@ let activities: Activity[] = [
         description: 'Exploring downtown neighborhoods on two wheels',
         type: ActivityTypes.RIDE,
         duration: 65,
-        date: new Date('2025-05-20T16:00:00Z'),
-        time: '16:00'
+        date: new Date('2025-05-20T16:00:00Z')
     },
     {
         id: '21',
@@ -242,8 +178,7 @@ let activities: Activity[] = [
         description: 'Water-based fitness class with resistance exercises',
         type: ActivityTypes.SWIM,
         duration: 45,
-        date: new Date('2025-05-21T11:00:00Z'),
-        time: '11:00'
+        date: new Date('2025-05-21T11:00:00Z')
     },
     {
         id: '22',
@@ -251,8 +186,7 @@ let activities: Activity[] = [
         description: 'Intense lower body training with squats and deadlifts',
         type: ActivityTypes.WORKOUT,
         duration: 70,
-        date: new Date('2025-05-22T17:30:00Z'),
-        time: '17:30'
+        date: new Date('2025-05-22T17:30:00Z')
     },
     {
         id: '23',
@@ -260,8 +194,7 @@ let activities: Activity[] = [
         description: 'High-intensity sprint training for speed development',
         type: ActivityTypes.HIIT,
         duration: 30,
-        date: new Date('2025-05-23T07:00:00Z'),
-        time: '07:00'
+        date: new Date('2025-05-23T07:00:00Z')
     },
     {
         id: '24',
@@ -269,8 +202,7 @@ let activities: Activity[] = [
         description: 'Stand-up paddleboarding on calm lake waters',
         type: ActivityTypes.OTHER,
         duration: 80,
-        date: new Date('2025-05-24T14:30:00Z'),
-        time: '14:30'
+        date: new Date('2025-05-24T14:30:00Z')
     },
     {
         id: '25',
@@ -278,8 +210,7 @@ let activities: Activity[] = [
         description: 'Easy-paced recovery run focusing on form',
         type: ActivityTypes.RUN,
         duration: 30,
-        date: new Date('2025-05-25T08:00:00Z'),
-        time: '08:00'
+        date: new Date('2025-05-25T08:00:00Z')
     },
     {
         id: '26',
@@ -287,8 +218,7 @@ let activities: Activity[] = [
         description: 'Casual evening walk around the neighborhood',
         type: ActivityTypes.WALK,
         duration: 25,
-        date: new Date('2025-05-26T19:30:00Z'),
-        time: '19:30'
+        date: new Date('2025-05-26T19:30:00Z')
     },
     {
         id: '27',
@@ -296,8 +226,7 @@ let activities: Activity[] = [
         description: 'Early morning hike to catch the sunrise from the summit',
         type: ActivityTypes.HIKE,
         duration: 100,
-        date: new Date('2025-05-27T05:30:00Z'),
-        time: '05:30'
+        date: new Date('2025-05-27T05:30:00Z')
     },
     {
         id: '28',
@@ -305,8 +234,7 @@ let activities: Activity[] = [
         description: 'Off-road cycling adventure on gravel paths',
         type: ActivityTypes.RIDE,
         duration: 85,
-        date: new Date('2025-05-28T13:00:00Z'),
-        time: '13:00'
+        date: new Date('2025-05-28T13:00:00Z')
     },
     {
         id: '29',
@@ -314,8 +242,7 @@ let activities: Activity[] = [
         description: 'Open water swimming session at the beach',
         type: ActivityTypes.SWIM,
         duration: 35,
-        date: new Date('2025-05-29T16:00:00Z'),
-        time: '16:00'
+        date: new Date('2025-05-29T16:00:00Z')
     },
     {
         id: '30',
@@ -323,8 +250,7 @@ let activities: Activity[] = [
         description: 'Focused workout on core strength and flexibility',
         type: ActivityTypes.WORKOUT,
         duration: 45,
-        date: new Date('2025-05-30T18:00:00Z'),
-        time: '18:00'
+        date: new Date('2025-05-30T18:00:00Z')
     },
     {
         id: '31',
@@ -332,18 +258,14 @@ let activities: Activity[] = [
         description: 'Holiday weekend high-intensity circuit training',
         type: ActivityTypes.HIIT,
         duration: 35,
-        date: new Date('2025-05-31T10:00:00Z'),
-        time: '10:00'
+        date: new Date('2025-05-31T10:00:00Z')
     }
 ];
 
-// Default user settings
 let userGoal: Goal | null = {
     userId: 'user_1',
     type: 'count',
-    target: 3,
-    frequency: 'daily',
-    weeklyTarget: 21
+    target: 3
 };
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -482,11 +404,10 @@ export const handlers = [
             description: body.description ?? '',
             type: body.type,
             duration: +body.duration || 0,
-            date: new Date(body.date),
-            time: body.time ?? ''
+            date: new Date(body.date)
         };
 
-        activities.unshift(newActivity); // Add to beginning
+        activities.unshift(newActivity);
         return HttpResponse.json(newActivity, { status: 201 });
     }),
 
@@ -505,11 +426,10 @@ export const handlers = [
             );
         }
 
-        // Full update - replace entire activity
         const updatedActivity: Activity = {
             ...activities[activityIndex],
             ...body,
-            id: id as string, // Ensure ID doesn't change
+            id: id as string,
             date: body.date ? new Date(body.date) : activities[activityIndex].date
         };
 
@@ -532,11 +452,10 @@ export const handlers = [
             );
         }
 
-        // Partial update - only update provided fields
         const updatedActivity: Activity = {
             ...activities[activityIndex],
             ...body,
-            id: id as string, // Ensure ID doesn't change
+            id: id as string,
             date: body.date ? new Date(body.date) : activities[activityIndex].date
         };
 
@@ -573,7 +492,6 @@ export const handlers = [
             );
         }
 
-        // Remove activities with matching IDs
         const originalLength = activities.length;
         activities = activities.filter((activity) => !ids.includes(activity.id!));
 
@@ -653,10 +571,10 @@ export const handlers = [
 
         const body = (await request.json()) as CreateGoalParams;
 
-        if (!body.type || !body.target || !body.frequency) {
+        if (!body.type || !body.target) {
             return new HttpResponse(
                 JSON.stringify({
-                    message: 'Goal type, value, and frequency are required',
+                    message: 'Goal type and value are required',
                     code: 'VALIDATION_ERROR'
                 }),
                 { status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -675,9 +593,7 @@ export const handlers = [
 
         userGoal = {
             type: body.type,
-            target: body.target,
-            frequency: body.frequency,
-            weeklyTarget: body.weeklyTarget
+            target: body.target
         };
 
         return HttpResponse.json(userGoal);
@@ -701,8 +617,7 @@ export const handlers = [
         userGoal = {
             ...body,
             type: body.type ?? userGoal?.type ?? 'duration',
-            target: body.target ?? userGoal?.target ?? 0,
-            frequency: body.frequency ?? userGoal?.frequency ?? 'daily'
+            target: body.target ?? userGoal?.target ?? 0
         };
 
         return HttpResponse.json(userGoal);

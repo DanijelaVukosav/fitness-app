@@ -27,7 +27,8 @@ import {
 import {
     type Activity,
     type ActivityType,
-    ActivityTypes
+    ActivityTypes,
+    type CreateActivity
 } from '@/pages/Activities/services/types.ts';
 
 import runImage from '@/assets/activities/run.png';
@@ -67,7 +68,7 @@ const getCurrentTime = (): string => {
     return now.toTimeString().slice(0, 5);
 };
 
-const defaultActivityValues: Activity = {
+const defaultActivityValues: CreateActivity = {
     title: '',
     description: '',
     type: ActivityTypes.RUN,
@@ -90,7 +91,7 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
         handleSubmit,
         reset,
         formState: { errors, isValid }
-    } = useForm<Activity>({
+    } = useForm<CreateActivity>({
         defaultValues: activity ?? defaultActivityValues,
         mode: 'onChange'
     });
@@ -107,14 +108,14 @@ export const AddActivityModal: React.FC<AddActivityModalProps> = ({
                 type: activity.type,
                 duration: activity.duration,
                 date: activityDate.toISOString().split('T')[0],
-                time: activity.time || ''
+                time: activityDate.toTimeString().slice(0, 5)
             });
         } else if (open && activity === null) {
             reset(defaultActivityValues);
         }
     }, [activity, open, reset]);
 
-    const onFormSubmit = async (data: Activity): Promise<void> => {
+    const onFormSubmit = async (data: CreateActivity): Promise<void> => {
         setIsSubmitting(true);
         setProgress(0);
 
